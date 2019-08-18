@@ -1,9 +1,5 @@
 const filterState = {
   active: `everything`,
-
-  get checkActive() {
-    return this.active;
-  }
 };
 
 /**
@@ -16,7 +12,7 @@ const filterState = {
  */
 export const getMarkupFilter = ([filterId, name]) => `
 <div class="trip-filters__filter">
-  <input id="filter-${filterId}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterId}" ${filterId === filterState.checkActive ? `checked` : ``}>
+  <input id="filter-${filterId}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterId}" ${filterId === filterState[`active`] ? `checked` : ``}>
   <label class="trip-filters__filter-label" for="filter-${filterId}">
     ${name}
   </label>

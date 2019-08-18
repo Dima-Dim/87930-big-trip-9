@@ -14,7 +14,7 @@ const dateState = {
   },
 
   get nextTimeStamp() {
-    this.timeStamp += Math.floor(Math.random() * 60) * Math.floor(Math.random() * 60) * Math.floor(Math.random() * 24) * Math.floor(Math.random() * 11) * 1000;
+    this.timeStamp += Math.floor(Math.random() * 950400) * 1000;
     return this.timeStamp;
   },
 };

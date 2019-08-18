@@ -13,8 +13,8 @@ const MAX_NUMBER_CITY_IN_TRIP_INFO = 3;
 const makeTripCities = (events) => {
   const tripCities = new Set();
 
-  for (let i of events) {
-    for (let j of i[1]) {
+  for (const i of events) {
+    for (const j of i[1]) {
       tripCities.add(j[`destination`]);
     }
   }
@@ -34,7 +34,7 @@ const makeTripInfoTitle = (events) => {
   const tripCities = makeTripCities(events);
 
   if (tripCities.length < MAX_NUMBER_CITY_IN_TRIP_INFO + 1) {
-    for (let i of tripCities) {
+    for (const i of tripCities) {
       newStr += `${i} - `;
     }
     newStr = newStr.substr(0, (newStr.length - 2));
