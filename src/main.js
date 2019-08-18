@@ -18,7 +18,7 @@ import {renderContent} from "./components/render";
  */
 const getEvents = (count) => {
   let days = new Set();
-  const tempArr = new Array(count).fill(``).map(getEventData).sort((a, b) => sortOrder.asc(a, b, [`startDate`]));
+  const tempArr = new Array(count).fill(``).map(getEventData).sort((a, b) => sortOrder.asc(a, b, `startDate`));
   for (let i of tempArr) {
     days.add(getDateForEventsDayListFromTimeStamp(i[`startDate`]));
   }
@@ -27,8 +27,6 @@ const getEvents = (count) => {
 };
 
 export const events = getEvents(ALL_EVENT_COUNT);
-
- // console.log(events);
 
 const calculationTotalCost = (costItems) => {
   let totalCost = 0;
