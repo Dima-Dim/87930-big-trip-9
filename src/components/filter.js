@@ -1,18 +1,36 @@
-export const getMarkupFilter = () => `<form class="trip-filters" action="#" method="get">
-              <div class="trip-filters__filter">
-                <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-                <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-              </div>
+const filterState = {
+  active: `everything`,
 
-              <div class="trip-filters__filter">
-                <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-                <label class="trip-filters__filter-label" for="filter-future">Future</label>
-              </div>
+  get checkActive() {
+    return this.active;
+  }
+};
 
-              <div class="trip-filters__filter">
-                <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-                <label class="trip-filters__filter-label" for="filter-past">Past</label>
-              </div>
+/**
+ * Функция, возвращающая разметку элемента фильтра событий
+ *
+ * @param {string} filterId Id фильтра
+ * @param {string} name Название фильтра
+ *
+ * @return {string} HTML-код
+ */
+export const getMarkupFilter = ([filterId, name]) => `
+<div class="trip-filters__filter">
+  <input id="filter-${filterId}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterId}" ${filterId === filterState.checkActive ? `checked` : ``}>
+  <label class="trip-filters__filter-label" for="filter-${filterId}">
+    ${name}
+  </label>
+</div>`;
 
-              <button class="visually-hidden" type="submit">Accept filter</button>
-            </form>`;
+/**
+ * Функция, возвращающая разметку блока фильтров событий
+ *
+ * @param {Array}items Массив фильтров событий
+ *
+ * @return {string} HTML-код
+ */
+export const getMarkupFilters = (items) => `
+<form class="trip-filters" action="#" method="get">
+  ${items.map((it) => getMarkupFilter(it)).join(``)}
+  <button class="visually-hidden" type="submit">Accept filter</button>
+</form>`;
