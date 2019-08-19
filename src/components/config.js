@@ -67,12 +67,12 @@ export const TRANSFER_EVENT_TYPES = new Map([
 
 export const ALL_EVENT_TYPES = new Map([...[...ACTIVITY_EVENT_TYPES, ...TRANSFER_EVENT_TYPES]]);
 
-export const EVENT_DESTINATION = new Set([
+export const EVENT_DESTINATION = [
   `Amsterdam`,
   `Geneva`,
   `Chamonix`,
   `Saint Petersburg`,
-]);
+];
 
 export const ADDITIONAL_OPTIONS = new Map([
   [`luggage`, {

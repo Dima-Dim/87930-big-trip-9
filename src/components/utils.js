@@ -152,6 +152,16 @@ export const getDurationFromTimeStamps = (startTimestamp, endTimestamp) => {
 };
 
 /**
+ * Функция для получения случайного целого числа в заданном промежутке
+ *
+ * @param {number} min Минимальное значение промежутка
+ * @param {number} max Максимальное значение промежутка
+ *
+ * @return {number} Случайное целое числа в заданном промежутке
+ */
+export const getRandomIntegerBetween = (min, max) => min + Math.floor(Math.random() * (max + 1 - min));
+
+/**
  * Функция для получения нового массива случайных элемента из переданного массива
  *
  * @param {Array} arr Массив, из которого нужно поучить случайные элементы
@@ -162,7 +172,7 @@ export const getDurationFromTimeStamps = (startTimestamp, endTimestamp) => {
 export const getRandomElementsFromArray = (arr, amount = 1) => {
   const newArr = [];
   for (let i = 0; i < amount; i++) {
-    newArr.push(arr[Math.floor(Math.random() * arr.length)]);
+    newArr.push(arr[getRandomIntegerBetween(0, arr.length)]);
   }
 
   return newArr;
