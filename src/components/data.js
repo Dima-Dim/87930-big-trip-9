@@ -62,7 +62,7 @@ const getEventPhoto = () => `http://picsum.photos/248/152?r=${Math.random()}`;
  */
 export const getEventData = () => ({
   type: Array.from(ALL_EVENT_TYPES)[getRandomIntegerBetween(0, ALL_EVENT_TYPES.size - 1)][0],
-  destination: Array.from(EVENT_DESTINATION)[getRandomIntegerBetween(EVENT_DESTINATION.length)],
+  destination: Array.from(EVENT_DESTINATION)[getRandomIntegerBetween(0, EVENT_DESTINATION.length - 1)],
   photo: new Array(getRandomIntegerBetween(MIN_NUMBER_OF_PHOTO, MAX_NUMBER_OF_PHOTO)).fill(``).map(() => getEventPhoto()),
   description: getRandomElementsFromArray(descriptions, DESCRIPTION_LENGTH).join(` `),
   startDate: dateState.nextTimeStamp,

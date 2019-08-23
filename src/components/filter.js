@@ -1,3 +1,5 @@
+import {elementTemplate, renderElement} from "./utils";
+
 const filterState = {
   active: `everything`,
 };
@@ -18,15 +20,29 @@ export const getMarkupFilter = ([filterId, name]) => `
   </label>
 </div>`;
 
+class Filters extends elementTemplate {
+  constructor(items) {
+    super();
+    this._items = items;
+  }
+
+  getTemplate() {
+    return `<form class="trip-filters" action="#" method="get">
+              ${this._items.map((it) => getMarkupFilter(it)).join(``)}
+              <button class="visually-hidden" type="submit">Accept filter</button>
+            </form>`;
+  }
+}
+
 /**
- * Функция, возвращающая разметку блока фильтров событий
+ * Функция для создания экземпляра класса и отправка его на рендеринг
  *
- * @param {Array}items Массив фильтров событий
- *
- * @return {string} HTML-код
+ * @param {string|Element} container Информация о контейнере, в который необходимо поместить элемент
+ * @param {Array} content Массив данных на основании которых необходимо подготовить элемент
+ * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
  */
-export const getMarkupFilters = (items) => `
-<form class="trip-filters" action="#" method="get">
-  ${items.map((it) => getMarkupFilter(it)).join(``)}
-  <button class="visually-hidden" type="submit">Accept filter</button>
-</form>`;
+export const renderFilters = (container, content, position) => {
+  const filters = new Filters(content);
+
+  renderElement(container, filters.getElement(), position);
+};

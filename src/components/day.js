@@ -1,34 +1,45 @@
-import {getDayFromTimeStamp, getNameMonthFromTimeStamp, getYearFromTimeStamp} from "./utils";
-import {getMarkupEvents} from "./event";
+import {elementTemplate, getDayFromTimeStamp, getNameMonthFromTimeStamp, getYearFromTimeStamp, renderElement} from "./utils";
+import {renderEvent} from "./event";
+
+class Day extends elementTemplate {
+  constructor([day, events]) {
+    super();
+    this._events = events;
+    this._day = day;
+  }
+
+  getTemplate() {
+    return `<li class="trip-days__item  day">
+              <div class="day__info">
+                <span class="day__counter">${getDayFromTimeStamp(this._events[0][`startDate`])}</span>
+                <time class="day__date" datetime="${this._day}"> ${getNameMonthFromTimeStamp(this._events[0][`startDate`]).substr(0, 3)} ${getYearFromTimeStamp(this._events[0][`startDate`], 2)}</time>
+              </div>
+            
+              <ul class="trip-events__list">
+                <li class="trip-events__item">
+                  
+                </li>
+              </ul>
+              
+            </li>`;
+  }
+}
 
 /**
- * Функция, возвращающая разметку дня, в течение которого происходят события
+ * Функция для создания экземпляра класса и отправка его на рендеринг
  *
- * @param {string} day Идентификатор дня, вида YYYY-MM-DD
- * @param {Array} events Массив событий, которые происходят в течение этого деня
- *
- * @return {string} HTML-код
+ * @param {string|Element} container Информация о контейнере, в который необходимо поместить элемент
+ * @param {Array} content Массив данных на основании которых необходимо подготовить элемент
+ * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
  */
-const getMarkupDay = ([day, events]) => `
-<li class="trip-days__item  day">
-  <div class="day__info">
-    <span class="day__counter">${getDayFromTimeStamp(events[0][`startDate`])}</span>
-    <time class="day__date" datetime="${day}"> ${getNameMonthFromTimeStamp(events[0][`startDate`]).substr(0, 3)} ${getYearFromTimeStamp(events[0][`startDate`], 2)}</time>
-  </div>
+export const renderDays = (container, content, position) => {
+  for (const item of content) {
+    const day = new Day(item);
 
-  <ul class="trip-events__list">
-    ${getMarkupEvents(events).map((it) => `
-    <li class="trip-events__item">
-      ${it}
-    </li>`).join(``)}
-  </ul>
-</li>`;
+    renderElement(container, day.getElement(), position);
 
-/**
- * Функция, возвращающая разметку блока дней, в течение которых происходят события
- *
- * @param {Array} events Массив дней, в течение которых происходят события
- *
- * @return {string} HTML-код
- */
-export const getMarkupDays = (events) => events.map((it) => getMarkupDay(it)).join(``);
+    for (const event of day._events) {
+      renderEvent(day.getElement().querySelector(`.trip-events__item`), event, `append`);
+    }
+  }
+};

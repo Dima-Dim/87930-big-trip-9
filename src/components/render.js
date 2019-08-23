@@ -5,7 +5,7 @@ import {CONTAINER_SELECTORS} from "./config";
  *
  * @param {string} container CSS-селектор контейнера, в который необходимо добавить HTML-код элемента
  * @param {string} content HTML-код, который нужно добавить в разметку страницы
- * @param {"beforebegin" | "afterbegin" | "beforeend" | "afterend"} position, который нужно добавить в разметку страницы
+ * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
  */
 const renderElement = (container, content, position = `beforeend`) => {
   document.querySelector(`${CONTAINER_SELECTORS[container]}`).insertAdjacentHTML(position, content);

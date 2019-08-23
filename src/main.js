@@ -1,13 +1,11 @@
 import {ALL_EVENT_COUNT, MENU, FILTERS, SORT, ADDITIONAL_OPTIONS, CONTAINER_SELECTORS} from "./components/config";
-import {sortOrder, getDateForEventsDayListFromTimeStamp} from "./components/utils";
+import {sortOrder, getDateForEventsDayListFromTimeStamp, renderElements} from "./components/utils";
 import {getEventData} from "./components/data";
-import {getMarkupTripInfo} from "./components/trip-info";
-import {getMarkupMenu} from "./components/menu";
-import {getMarkupFilters} from "./components/filter";
-import {getMarkupTripSort} from "./components/trip-sort";
-import {getMarkupDays} from "./components/day";
-import {getMarkupAddEvent} from "./components/add-event";
-import {renderContent} from "./components/render";
+import {renderTripInfo} from "./components/trip-info";
+import {renderMenu} from "./components/menu";
+import {renderFilters} from "./components/filter";
+import {renderTripSort} from "./components/trip-sort";
+import {renderDays} from "./components/day";
 
 /**
  * Функция для получения массива ивентов
@@ -50,40 +48,39 @@ document.querySelector(CONTAINER_SELECTORS[`TRIP_TOTAL_COST`]).textContent = cal
 const elements = {
   tripInfo: {
     container: `TRIP_INFO`,
-    position: `afterBegin`,
-    markup: getMarkupTripInfo(events),
+    position: `prepend`,
+    content: events,
+    renderFn: renderTripInfo,
     amount: 1
   },
   menu: {
     container: `TRIP_MENU`,
-    position: `afterEnd`,
-    markup: getMarkupMenu(Array.from(MENU)),
+    position: `insertAfter`,
+    content: Array.from(MENU),
+    renderFn: renderMenu,
     amount: 1
   },
   filter: {
     container: `TRIP_CONTROLS`,
-    position: `beforeEnd`,
-    markup: getMarkupFilters(Array.from(FILTERS)),
+    position: `append`,
+    content: Array.from(FILTERS),
+    renderFn: renderFilters,
     amount: 1
   },
   tripSort: {
     container: `TRIP_EVENTS`,
-    position: `beforeEnd`,
-    markup: getMarkupTripSort(Array.from(SORT)),
-    amount: 1
-  },
-  AddEvent: {
-    container: `TRIP_EVENTS`,
-    position: `beforeEnd`,
-    markup: getMarkupAddEvent(),
+    position: `append`,
+    content: Array.from(SORT),
+    renderFn: renderTripSort,
     amount: 1
   },
   day: {
     container: `TRIP_EVENTS`,
-    position: `beforeEnd`,
-    markup: getMarkupDays(events),
+    position: `append`,
+    content: Array.from(events),
+    renderFn: renderDays,
     amount: 1
   },
 };
 
-renderContent(elements);
+renderElements(elements);
