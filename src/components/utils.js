@@ -1,4 +1,4 @@
-import {LOCALES, TIME_FORMAT, CONTAINER_SELECTORS} from "./config";
+import {LOCALES, TIME_FORMAT} from "./config";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -226,6 +226,7 @@ export class elementTemplate {
   }
 
   removeElement() {
+    unRenderElement(this._element);
     this._element = null;
   }
 }
@@ -255,7 +256,7 @@ export const renderElement = (container, element, position = `append`) => {
   let parentContainer;
 
   if (typeof container === `string`) {
-    parentContainer = document.querySelector(`${CONTAINER_SELECTORS[container]}`);
+    parentContainer = document.querySelector(container);
   } else {
     parentContainer = container;
   }
@@ -283,15 +284,4 @@ export const renderElement = (container, element, position = `append`) => {
  */
 export const unRenderElement = (element) => {
   element.parentNode.removeChild(element);
-};
-
-/**
- * Функция для обработки объекта с информацией об элементах, которые необходимо добавить в страницу
- *
- * @param {$ObjMap} obj объект с информацией об элементах которые нужно добавить в страницу
- */
-export const renderElements = (obj) => {
-  for (const [, {container, position, content, renderFn}] of Object.entries(obj)) {
-    renderFn(container, content, position);
-  }
 };

@@ -1,4 +1,4 @@
-import {elementTemplate, renderElement} from "./utils";
+import {elementTemplate} from "./utils";
 
 /**
  * Функция, возвращающая разметку элемента меню
@@ -22,7 +22,7 @@ const menuState = {
   }
 };
 
-class Menu extends elementTemplate {
+export class Menu extends elementTemplate {
   constructor(events) {
     super();
     this._events = events;
@@ -34,16 +34,3 @@ class Menu extends elementTemplate {
             </nav>`;
   }
 }
-
-/**
- * Функция для создания экземпляра класса и отправка его на рендеринг
- *
- * @param {string|Element} container Информация о контейнере, в который необходимо поместить элемент
- * @param {Array} content Массив данных на основании которых необходимо подготовить элемент
- * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
- */
-export const renderMenu = (container, content, position) => {
-  const menu = new Menu(content);
-
-  renderElement(container, menu.getElement(), position);
-};

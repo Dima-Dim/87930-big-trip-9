@@ -1,4 +1,4 @@
-import {getDayFromTimeStamp, getNameMonthFromTimeStamp, elementTemplate, renderElement} from "./utils";
+import {getDayFromTimeStamp, getNameMonthFromTimeStamp, elementTemplate} from "./utils";
 
 const MONTH_NAME_LENGTH = 3;
 const MAX_NUMBER_CITY_IN_TRIP_INFO = 3;
@@ -72,7 +72,7 @@ const makeTripInfoStartEndTripDate = (firstDayEvents, lastDayEvents) => {
   return newStr;
 };
 
-class TripInfo extends elementTemplate {
+export class TripInfo extends elementTemplate {
   constructor(events) {
     super();
     this._events = events;
@@ -85,16 +85,3 @@ class TripInfo extends elementTemplate {
             </div>`;
   }
 }
-
-/**
- * Функция для создания экземпляра класса и отправка его на рендеринг
- *
- * @param {string|Element} container Информация о контейнере, в который необходимо поместить элемент
- * @param {Array} content Массив данных на основании которых необходимо подготовить элемент
- * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
- */
-export const renderTripInfo = (container, content, position) => {
-  const tripInfo = new TripInfo(content);
-
-  renderElement(container, tripInfo.getElement(), position);
-};

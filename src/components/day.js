@@ -1,7 +1,6 @@
-import {elementTemplate, getDayFromTimeStamp, getNameMonthFromTimeStamp, getYearFromTimeStamp, renderElement} from "./utils";
-import {renderEvent} from "./event";
+import {elementTemplate, getDayFromTimeStamp, getNameMonthFromTimeStamp, getYearFromTimeStamp} from "./utils";
 
-class Day extends elementTemplate {
+export class Day extends elementTemplate {
   constructor([day, events]) {
     super();
     this._events = events;
@@ -24,22 +23,3 @@ class Day extends elementTemplate {
             </li>`;
   }
 }
-
-/**
- * Функция для создания экземпляра класса и отправка его на рендеринг
- *
- * @param {string|Element} container Информация о контейнере, в который необходимо поместить элемент
- * @param {Array} content Массив данных на основании которых необходимо подготовить элемент
- * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
- */
-export const renderDays = (container, content, position) => {
-  for (const item of content) {
-    const day = new Day(item);
-
-    renderElement(container, day.getElement(), position);
-
-    for (const event of day._events) {
-      renderEvent(day.getElement().querySelector(`.trip-events__item`), event, `append`);
-    }
-  }
-};

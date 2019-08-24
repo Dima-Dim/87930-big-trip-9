@@ -1,11 +1,7 @@
-import {ALL_EVENT_COUNT, MENU, FILTERS, SORT, ADDITIONAL_OPTIONS, CONTAINER_SELECTORS} from "./components/config";
-import {sortOrder, getDateForEventsDayListFromTimeStamp, renderElements} from "./components/utils";
+import {ALL_EVENT_COUNT} from "./components/config";
+import {sortOrder, getDateForEventsDayListFromTimeStamp} from "./components/utils";
+import {Index} from "./controller";
 import {getEventData} from "./components/data";
-import {renderTripInfo} from "./components/trip-info";
-import {renderMenu} from "./components/menu";
-import {renderFilters} from "./components/filter";
-import {renderTripSort} from "./components/trip-sort";
-import {renderDays} from "./components/day";
 
 /**
  * Функция для получения массива ивентов
@@ -26,61 +22,5 @@ const getEvents = (count) => {
 
 export const events = getEvents(ALL_EVENT_COUNT);
 
-const calculationTotalCost = (costItems) => {
-  let totalCost = 0;
-
-  for (let i of costItems) {
-    for (let j of i[1]) {
-      totalCost += j[`price`];
-      if (j[`additionalOptions`].size > 0) {
-        for (let k of j[`additionalOptions`]) {
-          totalCost += Number(ADDITIONAL_OPTIONS.get(k)[`PRICE`]);
-        }
-      }
-    }
-  }
-
-  return totalCost;
-};
-
-document.querySelector(CONTAINER_SELECTORS[`TRIP_TOTAL_COST`]).textContent = calculationTotalCost(events);
-
-const elements = {
-  tripInfo: {
-    container: `TRIP_INFO`,
-    position: `prepend`,
-    content: events,
-    renderFn: renderTripInfo,
-    amount: 1
-  },
-  menu: {
-    container: `TRIP_MENU`,
-    position: `insertAfter`,
-    content: Array.from(MENU),
-    renderFn: renderMenu,
-    amount: 1
-  },
-  filter: {
-    container: `TRIP_CONTROLS`,
-    position: `append`,
-    content: Array.from(FILTERS),
-    renderFn: renderFilters,
-    amount: 1
-  },
-  tripSort: {
-    container: `TRIP_EVENTS`,
-    position: `append`,
-    content: Array.from(SORT),
-    renderFn: renderTripSort,
-    amount: 1
-  },
-  day: {
-    container: `TRIP_EVENTS`,
-    position: `append`,
-    content: Array.from(events),
-    renderFn: renderDays,
-    amount: 1
-  },
-};
-
-renderElements(elements);
+const start = new Index(events);
+start.init();

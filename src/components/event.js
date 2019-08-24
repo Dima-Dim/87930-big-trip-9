@@ -1,9 +1,8 @@
-import {ALL_EVENT_TYPES, CONTAINER_SELECTORS} from "./config";
-import {getTimeFromTimeStamp, getDatetimeFromTimeStamp, getDurationFromTimeStamps, elementTemplate, renderElement} from "./utils";
-import {EventEdit} from "./event-edit";
+import {ALL_EVENT_TYPES} from "./config";
+import {getTimeFromTimeStamp, getDatetimeFromTimeStamp, getDurationFromTimeStamps, elementTemplate} from "./utils";
 import {getAdditionalOptions} from "./additional-options";
 
-class Event extends elementTemplate {
+export class Event extends elementTemplate {
   constructor({type, destination, startDate, endDate, price, additionalOptions}) {
     super();
     this._type = type;
@@ -45,55 +44,3 @@ class Event extends elementTemplate {
             </div>`;
   }
 }
-
-/**
- * Функция для создания экземпляра класса и отправка его на рендеринг
- *
- * @param {string|Element} container Информация о контейнере, в который необходимо поместить элемент
- * @param {Array} content Массив данных на основании которых необходимо подготовить элемент
- * @param {"append"|"prepend"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
- */
-export const renderEvent = (container, content, position) => {
-  const event = new Event(content);
-  const eventEdit = new EventEdit(content);
-  const eventRollupBtn = event.getElement().querySelector(`${CONTAINER_SELECTORS.EVENT_ROLLUP_BTN}`);
-  const eventEditRollupBtn = eventEdit.getElement().querySelector(`${CONTAINER_SELECTORS.EVENT_ROLLUP_BTN}`);
-  const eventEditSaveBtn = eventEdit.getElement().querySelector(`${CONTAINER_SELECTORS.EVENT_SAVE_BTN}`);
-
-  const closingRollupHandler = () => {
-    eventEditRollupBtn.removeEventListener(`click`, onClickEditRollupBtn);
-    eventEditSaveBtn.removeEventListener(`click`, onClickEditRollupBtn);
-    container.replaceChild(event.getElement(), eventEdit.getElement());
-    eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
-    document.removeEventListener(`click`, onClickDifferentRollupBtn);
-  };
-
-  const openingRollupHandler = () => {
-    eventRollupBtn.removeEventListener(`click`, onClickRollupBtn);
-    container.replaceChild(eventEdit.getElement(), event.getElement());
-    eventEditRollupBtn.addEventListener(`click`, onClickEditRollupBtn);
-    eventEditSaveBtn.addEventListener(`click`, onClickEditRollupBtn);
-    document.addEventListener(`click`, onClickDifferentRollupBtn);
-  };
-
-  const onClickRollupBtn = () => {
-    openingRollupHandler();
-  };
-
-  const onClickEditRollupBtn = () => {
-    closingRollupHandler();
-  };
-
-  const onClickDifferentRollupBtn = (evt) => {
-    const target = evt.target;
-    if (!target.closest(`${CONTAINER_SELECTORS.EVENT_ROLLUP_BTN}`) || event.getElement().contains(target)) {
-      return;
-    }
-
-    closingRollupHandler();
-  };
-
-  eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
-
-  renderElement(container, event.getElement(), position);
-};
