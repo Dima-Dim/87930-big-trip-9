@@ -45,13 +45,7 @@ export class AbstractComponent {
    * @param {"append"|"prepend"|"insertBefore"|"insertAfter"} position Позиция вставки элемента, относительно контейнера, в который он вставляется
    */
   static renderElement(container, element, position = `append`) {
-    let parentContainer;
-
-    if (typeof container === `string`) {
-      parentContainer = document.querySelector(container);
-    } else {
-      parentContainer = container;
-    }
+    const parentContainer = typeof container === `string` ? document.querySelector(container) : container;
 
     switch (position) {
       case `append`:
