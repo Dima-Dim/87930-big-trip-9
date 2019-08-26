@@ -1,4 +1,5 @@
-import {getDayFromTimeStamp, getNameMonthFromTimeStamp, elementTemplate} from "./utils";
+import {getDayFromTimeStamp, getNameMonthFromTimeStamp} from "./utils";
+import {AbstractComponent} from "./abstract-component";
 
 const MONTH_NAME_LENGTH = 3;
 const MAX_NUMBER_CITY_IN_TRIP_INFO = 3;
@@ -72,7 +73,7 @@ const makeTripInfoStartEndTripDate = (firstDayEvents, lastDayEvents) => {
   return newStr;
 };
 
-export class TripInfo extends elementTemplate {
+export class TripInfo extends AbstractComponent {
   constructor(events) {
     super();
     this._events = events;

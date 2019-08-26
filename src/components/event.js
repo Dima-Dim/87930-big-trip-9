@@ -1,8 +1,9 @@
 import {ALL_EVENT_TYPES} from "./config";
-import {getTimeFromTimeStamp, getDatetimeFromTimeStamp, getDurationFromTimeStamps, elementTemplate} from "./utils";
+import {getTimeFromTimeStamp, getDatetimeFromTimeStamp, getDurationFromTimeStamps} from "./utils";
 import {getAdditionalOptions} from "./additional-options";
+import {AbstractComponent} from "./abstract-component";
 
-export class Event extends elementTemplate {
+export class Event extends AbstractComponent {
   constructor({type, destination, startDate, endDate, price, additionalOptions}) {
     super();
     this._type = type;

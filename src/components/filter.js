@@ -1,4 +1,4 @@
-import {elementTemplate} from "./utils";
+import {AbstractComponent} from "./abstract-component";
 
 const filterState = {
   active: `everything`,
@@ -20,7 +20,7 @@ export const getMarkupFilter = ([filterId, name]) => `
   </label>
 </div>`;
 
-export class Filters extends elementTemplate {
+export class Filters extends AbstractComponent {
   constructor(items) {
     super();
     this._items = items;

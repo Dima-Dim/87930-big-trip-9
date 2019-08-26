@@ -1,4 +1,4 @@
-import {elementTemplate} from "./utils";
+import {AbstractComponent} from "./abstract-component";
 
 const sortState = {
   active: `event`,
@@ -26,7 +26,7 @@ const getMarkupTripSortItem = ([sortId, {NAME, ICON}]) => `
   </label>
 </div>`;
 
-export class TripSort extends elementTemplate {
+export class TripSort extends AbstractComponent {
   constructor(items) {
     super();
     this._items = items;

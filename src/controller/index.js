@@ -1,5 +1,5 @@
 import {ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT} from "../components/config";
-import {renderElement} from "../components/utils";
+import {AbstractComponent} from "../components/abstract-component";
 import {TripInfo} from "../components/trip-info";
 import {Menu} from "../components/menu";
 import {Filters} from "../components/filter";
@@ -18,10 +18,10 @@ export class Index {
   }
 
   init() {
-    renderElement(`.${CONTAINER_SELECTORS.TRIP_INFO}`, this._tripInfo.getElement(), `prepend`);
-    renderElement(`.${CONTAINER_SELECTORS.TRIP_MENU}`, this._menu.getElement(), `insertAfter`);
-    renderElement(`.${CONTAINER_SELECTORS.TRIP_CONTROLS}`, this._filters.getElement(), `append`);
-    renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._tripSort.getElement(), `append`);
+    AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_INFO}`, this._tripInfo.getElement(), `prepend`);
+    AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_MENU}`, this._menu.getElement(), `insertAfter`);
+    AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_CONTROLS}`, this._filters.getElement(), `append`);
+    AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._tripSort.getElement(), `append`);
     this._renderDays(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, Array.from(this._days), `append`);
     Index._calculationTotalCost(this._days);
   }
@@ -30,7 +30,7 @@ export class Index {
     for (const it of days) {
       const day = new Day(it);
 
-      renderElement(container, day.getElement(), position);
+      AbstractComponent.renderElement(container, day.getElement(), position);
       this._renderEvents(day.getElement().querySelector(`.trip-events__item`), day._events, `append`);
     }
   }
@@ -78,7 +78,7 @@ export class Index {
 
       eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
 
-      renderElement(container, event.getElement(), position);
+      AbstractComponent.renderElement(container, event.getElement(), position);
     }
   }
 
