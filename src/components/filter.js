@@ -1,4 +1,4 @@
-import {AbstractComponent} from "./abstract-component";
+import AbstractComponent from "./abstract-component";
 
 const filterState = {
   active: `everything`,
@@ -20,7 +20,7 @@ export const getMarkupFilter = ([filterId, name]) => `
   </label>
 </div>`;
 
-export class Filters extends AbstractComponent {
+export default class Filters extends AbstractComponent {
   constructor(items) {
     super();
     this._items = items;

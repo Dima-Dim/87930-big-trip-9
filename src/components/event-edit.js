@@ -2,9 +2,9 @@ import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, EVENT_DESTINATION, TRANSFER_EVENT
 import {getMarkupEventTypeItems} from "./event-type-item";
 import {getDateForEvenEditFromTimeStamp} from "./utils";
 import {getEditAdditionalOptions} from "./additional-options";
-import {AbstractComponent} from "./abstract-component";
+import AbstractComponent from "./abstract-component";
 
-export class EventEdit extends AbstractComponent {
+export default class EventEdit extends AbstractComponent {
   constructor({type, destination, description, photo, startDate, endDate, price, additionalOptions, isFavorite}) {
     super();
     this._type = type;

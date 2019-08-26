@@ -1,4 +1,4 @@
-import {AbstractComponent} from "./abstract-component";
+import AbstractComponent from "./abstract-component";
 
 const sortState = {
   active: `event`,
@@ -26,7 +26,7 @@ const getMarkupTripSortItem = ([sortId, {NAME, ICON}]) => `
   </label>
 </div>`;
 
-export class TripSort extends AbstractComponent {
+export default class TripSort extends AbstractComponent {
   constructor(items) {
     super();
     this._items = items;

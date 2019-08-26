@@ -1,4 +1,4 @@
-import {AbstractComponent} from "./abstract-component";
+import AbstractComponent from "./abstract-component";
 
 /**
  * Функция, возвращающая разметку элемента меню
@@ -22,7 +22,7 @@ const menuState = {
   }
 };
 
-export class Menu extends AbstractComponent {
+export default class Menu extends AbstractComponent {
   constructor(events) {
     super();
     this._events = events;

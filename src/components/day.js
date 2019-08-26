@@ -1,7 +1,7 @@
 import {getDayFromTimeStamp, getNameMonthFromTimeStamp, getYearFromTimeStamp} from "./utils";
-import {AbstractComponent} from "./abstract-component";
+import AbstractComponent from "./abstract-component";
 
-export class Day extends AbstractComponent {
+export default class Day extends AbstractComponent {
   constructor([day, events]) {
     super();
     this._events = events;

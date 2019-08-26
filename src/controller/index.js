@@ -1,12 +1,12 @@
 import {ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT} from "../components/config";
-import {AbstractComponent} from "../components/abstract-component";
-import {TripInfo} from "../components/trip-info";
-import {Menu} from "../components/menu";
-import {Filters} from "../components/filter";
-import {TripSort} from "../components/trip-sort";
-import {Day} from "../components/day";
-import {Event} from "../components/event";
-import {EventEdit} from "../components/event-edit";
+import AbstractComponent from "../components/abstract-component";
+import TripInfo from "../components/trip-info";
+import Menu from "../components/menu";
+import Filters from "../components/filter";
+import TripSort from "../components/trip-sort";
+import Day from "../components/day";
+import Event from "../components/event";
+import EventEdit from "../components/event-edit";
 
 export class Index {
   constructor(days) {
