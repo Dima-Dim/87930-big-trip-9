@@ -81,8 +81,8 @@ export default class TripInfo extends AbstractComponent {
 
   getTemplate() {
     return `<div class="trip-info__main">
-              <h1 class="trip-info__title">${makeTripInfoTitle(this._events)}</h1>
-              <p class="trip-info__dates">${makeTripInfoStartEndTripDate(this._events[0][1], this._events[this._events.length - 1][1])}</p>
+              <h1 class="trip-info__title">${this._events.length ? makeTripInfoTitle(this._events) : ``}</h1>
+              <p class="trip-info__dates">${this._events.length ? makeTripInfoStartEndTripDate(this._events[0][1], this._events[this._events.length - 1][1]) : ``}</p>
             </div>`;
   }
 }

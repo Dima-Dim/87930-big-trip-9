@@ -7,6 +7,7 @@ import TripSort from "../components/trip-sort";
 import Day from "../components/day";
 import Event from "../components/event";
 import EventEdit from "../components/event-edit";
+import NoDays from "../components/no-days";
 
 export class Index {
   constructor(days) {
@@ -15,23 +16,29 @@ export class Index {
     this._menu = new Menu(Array.from(MENU));
     this._filters = new Filters(Array.from(FILTERS));
     this._tripSort = new TripSort(Array.from(SORT));
+    this._noDays = new NoDays();
   }
 
   init() {
     AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_INFO}`, this._tripInfo.getElement(), `prepend`);
     AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_MENU}`, this._menu.getElement(), `insertAfter`);
     AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_CONTROLS}`, this._filters.getElement(), `append`);
-    AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._tripSort.getElement(), `append`);
     this._renderDays(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, Array.from(this._days), `append`);
     Index._calculationTotalCost(this._days);
   }
 
   _renderDays(container, days, position) {
-    for (const it of days) {
-      const day = new Day(it);
+    if (days.length) {
+      AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._tripSort.getElement(), `append`);
 
-      AbstractComponent.renderElement(container, day.getElement(), position);
-      this._renderEvents(day.getElement().querySelector(`.trip-events__item`), day._events, `append`);
+      for (const it of days) {
+        const day = new Day(it);
+
+        AbstractComponent.renderElement(container, day.getElement(), position);
+        this._renderEvents(day.getElement().querySelector(`.trip-events__item`), day._events, `append`);
+      }
+    } else {
+      AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._noDays.getElement(), `append`);
     }
   }
 
