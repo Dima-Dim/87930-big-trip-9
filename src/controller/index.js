@@ -1,4 +1,4 @@
-import {ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT} from "../components/config";
+import {ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT, KeyCode} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import TripInfo from "../components/trip-info";
 import Menu from "../components/menu";
@@ -48,6 +48,7 @@ export class Index {
         eventEditSaveBtn.removeEventListener(`click`, onClickEditRollupBtn);
         container.replaceChild(event.getElement(), eventEdit.getElement());
         eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
+        document.removeEventListener(`keydown`, onEscDownRollup);
         document.removeEventListener(`click`, onClickDifferentRollupBtn);
       };
 
@@ -56,6 +57,7 @@ export class Index {
         container.replaceChild(eventEdit.getElement(), event.getElement());
         eventEditRollupBtn.addEventListener(`click`, onClickEditRollupBtn);
         eventEditSaveBtn.addEventListener(`click`, onClickEditRollupBtn);
+        document.addEventListener(`keydown`, onEscDownRollup);
         document.addEventListener(`click`, onClickDifferentRollupBtn);
       };
 
@@ -74,6 +76,13 @@ export class Index {
         }
 
         closingRollupHandler();
+      };
+
+      const onEscDownRollup = (evt) => {
+        const key = evt.keyCode;
+        if (key === KeyCode.ESC) {
+          closingRollupHandler();
+        }
       };
 
       eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
