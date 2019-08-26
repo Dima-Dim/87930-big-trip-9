@@ -1,9 +1,9 @@
 export const ALL_EVENT_COUNT = 4;
 export const DEFAULT_CHECKED_TYPE = `flight`;
 
-export const locales = `en-US`;
+export const LOCALES = `en-US`;
 
-export const timeFormat = {
+export const TIME_FORMAT = {
   hour: `numeric`,
   minute: `numeric`,
   hour12: false
@@ -132,9 +132,11 @@ export const SORT = new Map([
 ]);
 
 export const CONTAINER_SELECTORS = {
-  TRIP_INFO: `.trip-info`,
-  TRIP_CONTROLS: `.trip-controls`,
-  TRIP_MENU: `.trip-controls h2`,
-  TRIP_EVENTS: `.trip-events`,
-  TRIP_TOTAL_COST: `.trip-info__cost-value`,
+  TRIP_INFO: `trip-info`,
+  TRIP_CONTROLS: `trip-controls`,
+  TRIP_MENU: `trip-controls h2`,
+  TRIP_EVENTS: `trip-events`,
+  TRIP_TOTAL_COST: `trip-info__cost-value`,
+  EVENT_ROLLUP_BTN: `event__rollup-btn`,
+  EVENT_SAVE_BTN: `event__save-btn`,
 };

@@ -1,4 +1,5 @@
 import {getDayFromTimeStamp, getNameMonthFromTimeStamp} from "./utils";
+import AbstractComponent from "./abstract-component";
 
 const MONTH_NAME_LENGTH = 3;
 const MAX_NUMBER_CITY_IN_TRIP_INFO = 3;
@@ -72,15 +73,16 @@ const makeTripInfoStartEndTripDate = (firstDayEvents, lastDayEvents) => {
   return newStr;
 };
 
-/**
- * Функция, для создания блока с информацией о путешествие
- *
- * @param {Array} events Массив дней, в которые происходят события
- *
- * @return {string} HTML-код
- */
-export const getMarkupTripInfo = (events) => `
-<div class="trip-info__main">
-  <h1 class="trip-info__title">${makeTripInfoTitle(events)}</h1>
-  <p class="trip-info__dates">${makeTripInfoStartEndTripDate(events[0][1], events[events.length - 1][1])}</p>
-</div>`;
+export default class TripInfo extends AbstractComponent {
+  constructor(events) {
+    super();
+    this._events = events;
+  }
+
+  getTemplate() {
+    return `<div class="trip-info__main">
+              <h1 class="trip-info__title">${makeTripInfoTitle(this._events)}</h1>
+              <p class="trip-info__dates">${makeTripInfoStartEndTripDate(this._events[0][1], this._events[this._events.length - 1][1])}</p>
+            </div>`;
+  }
+}

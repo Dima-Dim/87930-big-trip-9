@@ -1,4 +1,4 @@
-import {locales, timeFormat} from "./config";
+import {LOCALES, TIME_FORMAT} from "./config";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -81,7 +81,7 @@ export const getYearFromTimeStamp = (timestamp, number = 4) => dateObgFromTimest
  *
  * @return {string}
  */
-export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(locales, timeFormat);
+export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(LOCALES, TIME_FORMAT);
 
 /**
  * Функция, преобразующая timestamp в datetime для HTML

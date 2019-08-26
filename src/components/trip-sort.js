@@ -1,3 +1,5 @@
+import AbstractComponent from "./abstract-component";
+
 const sortState = {
   active: `event`,
 
@@ -24,18 +26,19 @@ const getMarkupTripSortItem = ([sortId, {NAME, ICON}]) => `
   </label>
 </div>`;
 
-/**
- * Функция, для создания блока сортировки
- *
- * @param {Array} items Массив с элементами сортировки
- *
- * @return {string} HTML-код
- */
-export const getMarkupTripSort = (items) => `
-<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-  <span class="trip-sort__item  trip-sort__item--day">Day</span>
-  
-  ${items.map((it) => getMarkupTripSortItem(it)).join(``)}
+export default class TripSort extends AbstractComponent {
+  constructor(items) {
+    super();
+    this._items = items;
+  }
 
-  <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
-</form>`;
+  getTemplate() {
+    return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+              <span class="trip-sort__item  trip-sort__item--day">Day</span>
+              
+              ${this._items.map((it) => getMarkupTripSortItem(it)).join(``)}
+            
+              <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
+            </form>`;
+  }
+}
