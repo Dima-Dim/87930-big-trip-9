@@ -140,3 +140,7 @@ export const CONTAINER_SELECTORS = {
   EVENT_ROLLUP_BTN: `event__rollup-btn`,
   EVENT_SAVE_BTN: `event__save-btn`,
 };
+
+export const KeyCode = {
+  ESC: 27,
+};

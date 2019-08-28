@@ -1,4 +1,4 @@
-import {ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT} from "../components/config";
+import {ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT, KeyCode} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import TripInfo from "../components/trip-info";
 import Menu from "../components/menu";
@@ -7,6 +7,7 @@ import TripSort from "../components/trip-sort";
 import Day from "../components/day";
 import Event from "../components/event";
 import EventEdit from "../components/event-edit";
+import NoDays from "../components/no-days";
 
 export class Index {
   constructor(days) {
@@ -15,23 +16,29 @@ export class Index {
     this._menu = new Menu(Array.from(MENU));
     this._filters = new Filters(Array.from(FILTERS));
     this._tripSort = new TripSort(Array.from(SORT));
+    this._noDays = new NoDays();
   }
 
   init() {
     AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_INFO}`, this._tripInfo.getElement(), `prepend`);
     AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_MENU}`, this._menu.getElement(), `insertAfter`);
     AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_CONTROLS}`, this._filters.getElement(), `append`);
-    AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._tripSort.getElement(), `append`);
     this._renderDays(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, Array.from(this._days), `append`);
     Index._calculationTotalCost(this._days);
   }
 
   _renderDays(container, days, position) {
-    for (const it of days) {
-      const day = new Day(it);
+    if (days.length) {
+      AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._tripSort.getElement(), `append`);
 
-      AbstractComponent.renderElement(container, day.getElement(), position);
-      this._renderEvents(day.getElement().querySelector(`.trip-events__item`), day._events, `append`);
+      for (const it of days) {
+        const day = new Day(it);
+
+        AbstractComponent.renderElement(container, day.getElement(), position);
+        this._renderEvents(day.getElement().querySelector(`.trip-events__item`), day._events, `append`);
+      }
+    } else {
+      AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._noDays.getElement(), `append`);
     }
   }
 
@@ -39,6 +46,7 @@ export class Index {
     for (const it of events) {
       const event = new Event(it);
       const eventEdit = new EventEdit(it);
+      const inputs = eventEdit.getElement().querySelectorAll(`input, textarea`);
       const eventRollupBtn = event.getElement().querySelector(`.${CONTAINER_SELECTORS.EVENT_ROLLUP_BTN}`);
       const eventEditRollupBtn = eventEdit.getElement().querySelector(`.${CONTAINER_SELECTORS.EVENT_ROLLUP_BTN}`);
       const eventEditSaveBtn = eventEdit.getElement().querySelector(`.${CONTAINER_SELECTORS.EVENT_SAVE_BTN}`);
@@ -48,14 +56,19 @@ export class Index {
         eventEditSaveBtn.removeEventListener(`click`, onClickEditRollupBtn);
         container.replaceChild(event.getElement(), eventEdit.getElement());
         eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
+        document.removeEventListener(`keydown`, onEscDownRollup);
         document.removeEventListener(`click`, onClickDifferentRollupBtn);
       };
 
       const openingRollupHandler = () => {
         eventRollupBtn.removeEventListener(`click`, onClickRollupBtn);
         container.replaceChild(eventEdit.getElement(), event.getElement());
+        for (const input of inputs) {
+          input.addEventListener(`focus`, onFocusInput);
+        }
         eventEditRollupBtn.addEventListener(`click`, onClickEditRollupBtn);
         eventEditSaveBtn.addEventListener(`click`, onClickEditRollupBtn);
+        document.addEventListener(`keydown`, onEscDownRollup);
         document.addEventListener(`click`, onClickDifferentRollupBtn);
       };
 
@@ -74,6 +87,24 @@ export class Index {
         }
 
         closingRollupHandler();
+      };
+
+      const onEscDownRollup = (evt) => {
+        const key = evt.keyCode;
+        if (key === KeyCode.ESC) {
+          closingRollupHandler();
+        }
+      };
+
+      const onFocusInput = () => {
+        document.removeEventListener(`keydown`, onEscDownRollup);
+        for (const input of inputs) {
+          input.addEventListener(`blur`, onBlurInput);
+        }
+      };
+
+      const onBlurInput = () => {
+        document.addEventListener(`keydown`, onEscDownRollup);
       };
 
       eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
