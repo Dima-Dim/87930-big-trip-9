@@ -1,5 +1,6 @@
 export const ALL_EVENT_COUNT = 4;
 export const DEFAULT_CHECKED_TYPE = `flight`;
+export const DEFAULT_SORT_EVENTS = `event`;
 
 export const LOCALES = `en-US`;
 

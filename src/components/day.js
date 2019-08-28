@@ -11,8 +11,8 @@ export default class Day extends AbstractComponent {
   getTemplate() {
     return `<li class="trip-days__item  day">
               <div class="day__info">
-                <span class="day__counter">${getDayFromTimeStamp(this._events[0][`startDate`])}</span>
-                <time class="day__date" datetime="${this._day}"> ${getNameMonthFromTimeStamp(this._events[0][`startDate`]).substr(0, 3)} ${getYearFromTimeStamp(this._events[0][`startDate`], 2)}</time>
+                ${this._day ? `<span class="day__counter">${getDayFromTimeStamp(this._events[0][`startDate`])}</span>
+                <time class="day__date" datetime="${this._day}"> ${getNameMonthFromTimeStamp(this._events[0][`startDate`]).substr(0, 3)} ${getYearFromTimeStamp(this._events[0][`startDate`], 2)}</time>` : ``}
               </div>
             
               <ul class="trip-events__list">

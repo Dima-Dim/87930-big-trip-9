@@ -204,3 +204,8 @@ export const sortOrder = {
     return b[arg] - a[arg];
   },
 };
+
+export const sortOrderEvents = {
+  time: (a, b) => (a.endDate - a.startDate) - (b.endDate - b.startDate),
+  price: (a, b) => a.price - b.price,
+};
