@@ -3,11 +3,14 @@
  */
 export default class AbstractComponent {
   constructor() {
+    if (new.target === AbstractComponent) {
+      throw new Error(`Can't instantiate AbstractComponent, only create one.`);
+    }
     this._element = null;
   }
 
   getTemplate() {
-    return `Empty`;
+    throw new Error(`Abstract method not implemented: getTemplate.`);
   }
 
   getElement() {
