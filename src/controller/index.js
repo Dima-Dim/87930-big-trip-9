@@ -46,6 +46,7 @@ export class Index {
     for (const it of events) {
       const event = new Event(it);
       const eventEdit = new EventEdit(it);
+      const inputs = eventEdit.getElement().querySelectorAll(`input, textarea`);
       const eventRollupBtn = event.getElement().querySelector(`.${CONTAINER_SELECTORS.EVENT_ROLLUP_BTN}`);
       const eventEditRollupBtn = eventEdit.getElement().querySelector(`.${CONTAINER_SELECTORS.EVENT_ROLLUP_BTN}`);
       const eventEditSaveBtn = eventEdit.getElement().querySelector(`.${CONTAINER_SELECTORS.EVENT_SAVE_BTN}`);
@@ -62,6 +63,9 @@ export class Index {
       const openingRollupHandler = () => {
         eventRollupBtn.removeEventListener(`click`, onClickRollupBtn);
         container.replaceChild(eventEdit.getElement(), event.getElement());
+        for (const input of inputs) {
+          input.addEventListener(`focus`, onFocusInput);
+        }
         eventEditRollupBtn.addEventListener(`click`, onClickEditRollupBtn);
         eventEditSaveBtn.addEventListener(`click`, onClickEditRollupBtn);
         document.addEventListener(`keydown`, onEscDownRollup);
@@ -90,6 +94,17 @@ export class Index {
         if (key === KeyCode.ESC) {
           closingRollupHandler();
         }
+      };
+
+      const onFocusInput = () => {
+        document.removeEventListener(`keydown`, onEscDownRollup);
+        for (const input of inputs) {
+          input.addEventListener(`blur`, onBlurInput);
+        }
+      };
+
+      const onBlurInput = () => {
+        document.addEventListener(`keydown`, onEscDownRollup);
       };
 
       eventRollupBtn.addEventListener(`click`, onClickRollupBtn);
