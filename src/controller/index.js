@@ -1,4 +1,4 @@
-import {ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT, KeyCode} from "../components/config";
+import {DEFAULT_SORT_EVENTS, ADDITIONAL_OPTIONS, CONTAINER_SELECTORS, FILTERS, MENU, SORT, KeyCode} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import TripInfo from "../components/trip-info";
 import Menu from "../components/menu";
@@ -8,15 +8,20 @@ import Day from "../components/day";
 import Event from "../components/event";
 import EventEdit from "../components/event-edit";
 import NoDays from "../components/no-days";
+import TripSortItem from "../components/trip-sort-item";
+import {sortOrderEvents} from "../components/utils";
 
 export class Index {
   constructor(days) {
     this._days = days;
+    this._sortedEvents = [];
     this._tripInfo = new TripInfo(days);
     this._menu = new Menu(Array.from(MENU));
     this._filters = new Filters(Array.from(FILTERS));
-    this._tripSort = new TripSort(Array.from(SORT));
     this._noDays = new NoDays();
+    this._state = {
+      sort: DEFAULT_SORT_EVENTS,
+    };
   }
 
   init() {
@@ -27,9 +32,40 @@ export class Index {
     Index._calculationTotalCost(this._days);
   }
 
+  _changeEventOrder(type) {
+    this._sortedEvents = [];
+    document.querySelector(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`).textContent = ``;
+    if (type === DEFAULT_SORT_EVENTS) {
+      this._renderDays(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, Array.from(this._days), `append`);
+    } else {
+      this._days.forEach((day) => day[1].forEach((dayItem) => this._sortedEvents.push(dayItem)));
+      this._sortedEvents.sort(sortOrderEvents[this._state.sort]);
+      this._renderDays(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, [[0, this._sortedEvents]], `append`);
+    }
+  }
+
+  _renderSort() {
+    const tripSort = new TripSort(this._state.sort);
+    AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, tripSort.getElement(this._state.sort), `append`);
+
+    Array.from(SORT).forEach((it) => {
+      const tripSortItem = new TripSortItem(it, this._state.sort);
+
+      const onChangeTripSortItem = (evt) => {
+        tripSortItem.getElement().removeEventListener(`change`, onChangeTripSortItem);
+        this._state.sort = evt.target.dataset.type;
+        this._changeEventOrder(this._state.sort);
+      };
+
+      tripSortItem.getElement().addEventListener(`change`, onChangeTripSortItem);
+
+      AbstractComponent.renderElement(tripSort.getElement().lastElementChild, tripSortItem.getElement(), `insertBefore`);
+    });
+  }
+
   _renderDays(container, days, position) {
     if (days.length) {
-      AbstractComponent.renderElement(`.${CONTAINER_SELECTORS.TRIP_EVENTS}`, this._tripSort.getElement(), `append`);
+      this._renderSort();
 
       for (const it of days) {
         const day = new Day(it);
