@@ -22,5 +22,5 @@ const getEvents = (count) => {
 
 export const events = getEvents(ALL_EVENT_COUNT);
 
-const start = new Index(events);
+const start = new Index(new Map([...events]));
 start.init();
