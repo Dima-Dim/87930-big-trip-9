@@ -178,6 +178,13 @@ export const getRandomElementsFromArray = (arr, amount = 1) => {
   return newArr;
 };
 
+/**
+ * Функция для получения url-ов случайных фото
+ *
+ * @return {string} URL
+ */
+export const getEventPhoto = () => `http://picsum.photos/248/152?r=${Math.random()}`;
+
 export const sortOrder = {
   /**
    * Функция для сортировки по возрастанию массива объектов на основании определенного свойства этих объектов

@@ -1,17 +1,13 @@
 import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, EVENT_DESTINATION, TRANSFER_EVENT_TYPES} from "./config";
 import {getMarkupEventTypeItems} from "./event-type-item";
-import {getDateForEvenEditFromTimeStamp} from "./utils";
 import {getEditAdditionalOptions} from "./additional-options";
 import AbstractComponent from "./abstract-component";
 
 export default class EventEdit extends AbstractComponent {
-  constructor({type, destination, description, photo, startDate, endDate, price, additionalOptions, isFavorite}) {
+  constructor({type, destination, startDate, endDate, price, additionalOptions, isFavorite}) {
     super();
     this._type = type;
     this._destination = destination;
-    this._description = description;
-    this._description = description;
-    this._photo = photo;
     this._endDate = endDate;
     this._startDate = startDate;
     this._price = price;
@@ -28,20 +24,20 @@ export default class EventEdit extends AbstractComponent {
                     <img class="event__type-icon" width="17" height="17" src="${ALL_EVENT_TYPES.get(this._type)[`ICON_URL`]}" alt="Event type icon">
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-            
+
                   <div class="event__type-list">
                     <fieldset class="event__type-group">
                       <legend class="visually-hidden">Transfer</legend>
-                      
-                      ${getMarkupEventTypeItems(ACTIVITY_EVENT_TYPES)}
-            
+
+                      ${getMarkupEventTypeItems(ACTIVITY_EVENT_TYPES, this._type)}
+
                     </fieldset>
             
                     <fieldset class="event__type-group">
                       <legend class="visually-hidden">Activity</legend>
-            
-                      ${getMarkupEventTypeItems(TRANSFER_EVENT_TYPES)}
-                      
+
+                      ${getMarkupEventTypeItems(TRANSFER_EVENT_TYPES, this._type)}
+
                     </fieldset>
                   </div>
                 </div>
@@ -52,7 +48,7 @@ export default class EventEdit extends AbstractComponent {
                   </label>
                   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._destination}" list="destination-list-1">
                   <datalist id="destination-list-1">
-                    ${Array.from(EVENT_DESTINATION).map((it) => `<option value="${it}"></option>`).join(``)}
+                    ${Array.from(EVENT_DESTINATION).map((it) => `<option value="${it[0]}" ${it[0] === this._destination ? `selected` : ``}></option>`).join(``)}
                   </datalist>
                 </div>
             
@@ -60,12 +56,12 @@ export default class EventEdit extends AbstractComponent {
                   <label class="visually-hidden" for="event-start-time-1">
                     From
                   </label>
-                  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getDateForEvenEditFromTimeStamp(this._startDate)}">
+                  <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._startDate / 1000}">
                   &mdash;
                   <label class="visually-hidden" for="event-end-time-1">
                     To
                   </label>
-                  <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getDateForEvenEditFromTimeStamp(this._endDate)}">
+                  <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${this._endDate / 1000}">
                 </div>
             
                 <div class="event__field-group  event__field-group--price">
@@ -106,15 +102,21 @@ export default class EventEdit extends AbstractComponent {
             
                 <section class="event__section  event__section--destination">
                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                  <p class="event__destination-description">${this._description}</p>
+                  <p class="event__destination-description">${EVENT_DESTINATION.get(this._destination).DESCRIPTION}</p>
             
                   <div class="event__photos-container">
                     <div class="event__photos-tape">
-                      ${this._photo.map((it) => `<img class="event__photo" src="${it}" alt="Event photo">`).join(``)}
+
+                      ${this.getPhotosMarkup(EVENT_DESTINATION.get(this._destination).PHOTO)}
+
                     </div>
                   </div>
                 </section>
               </section>
             </form>`;
+  }
+
+  getPhotosMarkup(photos) {
+    return photos.map((it) => `<img class="event__photo" src="${it}" alt="Event photo">`).join(``);
   }
 }

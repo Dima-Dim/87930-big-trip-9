@@ -1,5 +1,5 @@
 import {ALL_EVENT_COUNT} from "./components/config";
-import {sortOrder, getDateForEventsDayListFromTimeStamp} from "./components/utils";
+import {sortOrder} from "./components/utils";
 import {Index} from "./controller";
 import {getEventData} from "./components/data";
 
@@ -8,19 +8,9 @@ import {getEventData} from "./components/data";
  *
  * @param {number} count Количество ивентов, которое необходимо получить
  *
- * @return {Array} allEvents массив ивентов
+ * @return {Array} массив ивентов
  */
-const getEvents = (count) => {
-  let days = new Set();
-  const tempArr = new Array(count).fill(``).map(getEventData).sort((a, b) => sortOrder.asc(a, b, `startDate`));
-  for (let i of tempArr) {
-    days.add(getDateForEventsDayListFromTimeStamp(i[`startDate`]));
-  }
+const getEvents = (count) => new Array(count).fill(``).map(getEventData).sort((a, b) => sortOrder.asc(a, b, `startDate`));
 
-  return Array.from(days).map((it) => [it, tempArr.filter((item) => it === getDateForEventsDayListFromTimeStamp(item[`startDate`]))]);
-};
-
-export const events = getEvents(ALL_EVENT_COUNT);
-
-const start = new Index(events);
+const start = new Index(getEvents(ALL_EVENT_COUNT));
 start.init();
