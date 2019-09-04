@@ -1,6 +1,5 @@
 import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, EVENT_DESTINATION, TRANSFER_EVENT_TYPES} from "./config";
 import {getMarkupEventTypeItems} from "./event-type-item";
-import {getDateForEvenEditFromTimeStamp} from "./utils";
 import {getEditAdditionalOptions} from "./additional-options";
 import AbstractComponent from "./abstract-component";
 
