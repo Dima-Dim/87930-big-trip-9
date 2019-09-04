@@ -167,6 +167,12 @@ export const ClassesElements = {
   TRIP_MENU: `trip-controls h2`,
   TRIP_EVENTS: `trip-events`,
   TRIP_TOTAL_COST: `trip-info__cost-value`,
+  EVENT_TYPE_INPUT_LIST: `event__type-list`,
+  EVENT_TYPE_ICON: `event__type-icon`,
+  EVENT_TYPE_OUTPUT: `event__type-output`,
+  EVENT_DESTINATION_INPUT: `event__input--destination`,
+  EVENT_DESTINATION_DESCRIPTION: `event__destination-description`,
+  EVENT_DESTINATION_PHOTOS_CONTAINER: `event__photos-tape`,
   EVENT_PRICE_INPUT: `event__input--price`,
   EVENT_OFFER_CHECKBOX_CONTAINER: `event__available-offers`,
   EVENT_TIME_INPUT: `event__input--time`,
@@ -182,5 +188,8 @@ export const KeyCode = {
 export const FLATPICKR_CONFIG = {
   locale: `en`,
   enableTime: true,
-  dateFormat: `d / m / y h:i`
+  altInput: true,
+  altFormat: `d/m/y h:i`,
+  // dateFormat: `d/m/y h:i`,
+  dateFormat: `U`,
 };

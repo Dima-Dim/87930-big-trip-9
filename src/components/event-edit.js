@@ -5,11 +5,10 @@ import {getEditAdditionalOptions} from "./additional-options";
 import AbstractComponent from "./abstract-component";
 
 export default class EventEdit extends AbstractComponent {
-  constructor({type, destination, photo, startDate, endDate, price, additionalOptions, isFavorite}) {
+  constructor({type, destination, startDate, endDate, price, additionalOptions, isFavorite}) {
     super();
     this._type = type;
     this._destination = destination;
-    this._photo = photo;
     this._endDate = endDate;
     this._startDate = startDate;
     this._price = price;
@@ -26,20 +25,20 @@ export default class EventEdit extends AbstractComponent {
                     <img class="event__type-icon" width="17" height="17" src="${ALL_EVENT_TYPES.get(this._type)[`ICON_URL`]}" alt="Event type icon">
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-            
+
                   <div class="event__type-list">
                     <fieldset class="event__type-group">
                       <legend class="visually-hidden">Transfer</legend>
-                      
+
                       ${getMarkupEventTypeItems(ACTIVITY_EVENT_TYPES, this._type)}
-            
+
                     </fieldset>
             
                     <fieldset class="event__type-group">
                       <legend class="visually-hidden">Activity</legend>
-            
+
                       ${getMarkupEventTypeItems(TRANSFER_EVENT_TYPES, this._type)}
-                      
+
                     </fieldset>
                   </div>
                 </div>
@@ -58,13 +57,12 @@ export default class EventEdit extends AbstractComponent {
                   <label class="visually-hidden" for="event-start-time-1">
                     From
                   </label>
-                  <!--input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getDateForEvenEditFromTimeStamp(this._startDate)}" data-time="${this._startDate}"-->
-                  <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._startDate}" data-time="${this._startDate}">
+                  <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._startDate / 1000}">
                   &mdash;
                   <label class="visually-hidden" for="event-end-time-1">
                     To
                   </label>
-                  <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getDateForEvenEditFromTimeStamp(this._endDate)}" data-time="${this._startDate}">
+                  <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${this._endDate / 1000}">
                 </div>
             
                 <div class="event__field-group  event__field-group--price">
@@ -109,11 +107,17 @@ export default class EventEdit extends AbstractComponent {
             
                   <div class="event__photos-container">
                     <div class="event__photos-tape">
-                      ${EVENT_DESTINATION.get(this._destination).PHOTO.map((it) => `<img class="event__photo" src="${it}" alt="Event photo">`).join(``)}
+
+                      ${this.getPhotosMarkup(EVENT_DESTINATION.get(this._destination).PHOTO)}
+
                     </div>
                   </div>
                 </section>
               </section>
             </form>`;
+  }
+
+  getPhotosMarkup(photos) {
+    return photos.map((it) => `<img class="event__photo" src="${it}" alt="Event photo">`).join(``);
   }
 }

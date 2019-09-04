@@ -11,10 +11,11 @@ import {getDateForEventsDayListFromTimeStamp, sortOrderEvents} from "../componen
 import PointController from "./point-controller";
 
 export class Index {
-  constructor(days) {
-    this._days = days;
+  constructor(events) {
+    this._events = events;
+    this._days = this._getDays(events);
     this._sortedEvents = [];
-    this._tripInfo = new TripInfo(days);
+    this._tripInfo = new TripInfo(this._days);
     this._menu = new Menu(Array.from(MENU));
     this._filters = new Filters(Array.from(FILTERS));
     this._noDays = new NoDays();
@@ -22,6 +23,14 @@ export class Index {
     this._state = {
       sort: DEFAULT_SORT_EVENTS,
     };
+  }
+
+  _getDays(events) {
+    let days = new Set();
+    for (let i of events) {
+      days.add(getDateForEventsDayListFromTimeStamp(i[`startDate`]));
+    }
+    return new Map([...Array.from(days).map((it) => [it, events.filter((item) => it === getDateForEventsDayListFromTimeStamp(item[`startDate`]))])]);
   }
 
   init() {
@@ -32,7 +41,7 @@ export class Index {
     Index._calculationTotalCost(this._days);
   }
 
-  _changeEventOrder(type) {
+  _changeEventOrder(type = DEFAULT_SORT_EVENTS) {
     this._sortedEvents = [];
     document.querySelector(`.${ClassesElements.TRIP_EVENTS}`).textContent = ``;
     if (type === DEFAULT_SORT_EVENTS) {
@@ -86,10 +95,8 @@ export class Index {
   }
 
   _onDataChange(currentData, newData) {
-    const dayId = getDateForEventsDayListFromTimeStamp(currentData.startDate);
-    const currentDay = this._days.get(dayId);
-    currentDay[currentDay.findIndex((it) => it === currentData)] = newData;
-    this._days.set(dayId, currentDay);
+    this._events[this._events.findIndex((it) => it === currentData)] = newData;
+    this._days = this._getDays(this._events);
     this._changeEventOrder();
   }
 
