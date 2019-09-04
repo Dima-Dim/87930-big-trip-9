@@ -1,8 +1,7 @@
 /**
  * Функция, возвращающая разметку типа события
  *
- * @param {string} idEvent Id типа события
- * @param {string} NAME Название типа события
+ * @param {string} Элемент Map с информацией о типе события
  * @param {string} activeType Активный тип
  *
  * @return {string}
