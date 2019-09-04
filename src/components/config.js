@@ -190,6 +190,5 @@ export const FLATPICKR_CONFIG = {
   enableTime: true,
   altInput: true,
   altFormat: `d/m/y h:i`,
-  // dateFormat: `d/m/y h:i`,
   dateFormat: `U`,
 };
