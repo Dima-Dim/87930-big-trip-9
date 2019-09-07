@@ -1,9 +1,12 @@
 import Event from "../components/event";
 import EventEdit from "../components/event-edit";
 import {ClassesElements, KeyCode, FLATPICKR_CONFIG, ALL_EVENT_TYPES, EVENT_DESTINATION} from "../components/config";
+import {getDateForEvenEditFromTimeStamp} from "../components/utils";
 import AbstractComponent from "../components/abstract-component";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import * as RangePlugin from "flatpickr/dist/plugins/rangePlugin";
+import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 
 export default class PointController {
   constructor(container, data, onDataChange, position) {
@@ -11,6 +14,8 @@ export default class PointController {
     this._event = data;
     this._position = position;
     this._onDataChange = onDataChange;
+    this._flatpickr = true;
+    this._flatpickrPlugins = new Set([`range`, `confirmdate`]);
   }
 
   init() {
@@ -31,8 +36,39 @@ export default class PointController {
     const eventEditFavoriteInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_FAVORITE_INPUT}`);
     const eventEditTypeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT}`);
 
-    flatpickr(eventEditStartTimeInput, FLATPICKR_CONFIG);
-    flatpickr(eventEditEndTimeInput, FLATPICKR_CONFIG);
+    const useFlatpickr = (plugins) => {
+      const flatpickrPlugins = [];
+      let replaceEndDate = true;
+      let flatpickrConfig = FLATPICKR_CONFIG;
+
+      if (plugins && plugins.includes(`confirmdate`)) {
+        flatpickrPlugins.push(new ConfirmDatePlugin({showAlways: false}));
+        flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: [new ConfirmDatePlugin({showAlways: false})]});
+      }
+
+      if (plugins && plugins.includes(`range`)) {
+        flatpickrPlugins.push(new RangePlugin({input: eventEditEndTimeInput}));
+        flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: [new RangePlugin({input: eventEditEndTimeInput})]});
+        replaceEndDate = false;
+      }
+
+      flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: flatpickrPlugins});
+
+      flatpickr(eventEditStartTimeInput, flatpickrConfig);
+
+      if (replaceEndDate) {
+        flatpickr(eventEditEndTimeInput, flatpickrConfig);
+      }
+    };
+
+    if (this._flatpickr && this._flatpickrPlugins) {
+      useFlatpickr(Array.from(this._flatpickrPlugins));
+    } else if (this._flatpickr) {
+      useFlatpickr();
+    } else {
+      eventEditStartTimeInput.value = getDateForEvenEditFromTimeStamp(this._event.startDate);
+      eventEditEndTimeInput.value = getDateForEvenEditFromTimeStamp(this._event.endDate);
+    }
 
     const closingRollupHandler = () => {
       eventEditRollupCloseBtn.removeEventListener(`click`, onClickEditRollupBtn);
@@ -121,8 +157,8 @@ export default class PointController {
         destination: form.get(`event-destination`),
         price: Number(form.get(`event-price`)),
         additionalOptions: offers,
-        startDate: Number(eventEditStartTimeInput.value * 1000),
-        endDate: Number(eventEditEndTimeInput.value * 1000),
+        startDate: this._flatpickrPlugins && this._flatpickrPlugins.has(`range`) ? Number(eventEditStartTimeInput.value.slice(0, 10) * 1000) : Number(eventEditStartTimeInput.value * 1000),
+        endDate: this._flatpickrPlugins && this._flatpickrPlugins.has(`range`) ? Number(eventEditStartTimeInput.value.slice(-10) * 1000) : Number(eventEditEndTimeInput.value * 1000),
         isFavorite: eventEditFavoriteInput.checked,
         type: eventEditTypeInput.querySelector(`input:checked`).value,
       };
