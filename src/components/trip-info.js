@@ -76,7 +76,7 @@ const makeTripInfoStartEndTripDate = (firstDayEvents, lastDayEvents) => {
 export default class TripInfo extends AbstractComponent {
   constructor(events) {
     super();
-    this._events = events;
+    this._events = Array.from(events);
   }
 
   getTemplate() {
