@@ -185,10 +185,19 @@ export const KeyCode = {
   ESC: 27,
 };
 
-export const FLATPICKR_CONFIG = {
-  locale: `en`,
-  enableTime: true,
-  altInput: true,
-  altFormat: `d/m/y h:i`,
-  dateFormat: `U`,
-};
+const FLATPICKR_TEMP_CONFIG = {};
+
+export const FLATPICKR_CONF = new Map([
+  [`locale`, `en`],
+  [`enableTime`, true],
+  [`time_24hr`, true],
+  [`altInput`, true],
+  [`altFormat`, `d/m/y H:i`],
+  [`dateFormat`, `U`],
+]);
+
+FLATPICKR_CONF.forEach((value, key) => {
+  FLATPICKR_TEMP_CONFIG[key] = value;
+});
+
+export const FLATPICKR_CONFIG = FLATPICKR_TEMP_CONFIG;
