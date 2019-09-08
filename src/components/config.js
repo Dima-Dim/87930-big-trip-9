@@ -5,7 +5,8 @@ const DESCRIPTION_LENGTH = 3;
 const MIN_NUMBER_OF_PHOTO = 1;
 const MAX_NUMBER_OF_PHOTO = 5;
 export const DEFAULT_CHECKED_TYPE = `flight`;
-export const DEFAULT_SORT_EVENTS = `event`;
+export const DEFAULT_SORT_EVENTS = `sort-event`;
+export const SORT_ID_PREFIX = `sort-`;
 const descriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`,
@@ -161,12 +162,18 @@ export const SORT = new Map([
   }]
 ]);
 
+export const IdElements = {
+  MENU_LINK_TABLE: `table`,
+  MENU_LINK_STATS: `stats`,
+};
+
 export const ClassesElements = {
   TRIP_INFO: `trip-info`,
   TRIP_CONTROLS: `trip-controls`,
   TRIP_MENU: `trip-controls h2`,
   TRIP_EVENTS: `trip-events`,
   TRIP_TOTAL_COST: `trip-info__cost-value`,
+  TRIP_EVENT_ADD: `trip-main__event-add-btn`,
   EVENT_TYPE_INPUT_LIST: `event__type-list`,
   EVENT_TYPE_ICON: `event__type-icon`,
   EVENT_TYPE_OUTPUT: `event__type-output`,
@@ -177,8 +184,10 @@ export const ClassesElements = {
   EVENT_OFFER_CHECKBOX_CONTAINER: `event__available-offers`,
   EVENT_TIME_INPUT: `event__input--time`,
   EVENT_FAVORITE_INPUT: `event__favorite-checkbox`,
+  EVENT_FAVORITE_BTN: `event__favorite-btn`,
   EVENT_TYPE_INPUT: `event__type-list`,
   EVENT_ROLLUP_BTN: `event__rollup-btn`,
+  EVENT_DELETE_BTN: `event__reset-btn`,
 };
 
 export const KeyCode = {

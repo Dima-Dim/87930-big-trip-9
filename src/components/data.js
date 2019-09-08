@@ -44,3 +44,13 @@ export const getEventData = () => ({
   additionalOptions: new Set(new Array(getRandomIntegerBetween(MIN_ADDITIONAL_OPTIONS, MAX_ADDITIONAL_OPTIONS)).fill(``).map(() => Array.from(ADDITIONAL_OPTIONS)[getRandomIntegerBetween(0, ADDITIONAL_OPTIONS.size - 1)][0])),
   isFavorite: Boolean(getRandomIntegerBetween(0, 1)),
 });
+
+export const getEventDefaultData = () => ({
+  type: null,
+  destination: Array.from(EVENT_DESTINATION)[0][0],
+  startDate: Date.now(),
+  endDate: Date.now(),
+  price: 1,
+  additionalOptions: null,
+  isFavorite: false,
+});

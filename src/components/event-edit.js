@@ -1,4 +1,5 @@
-import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, EVENT_DESTINATION, TRANSFER_EVENT_TYPES} from "./config";
+import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, DEFAULT_CHECKED_TYPE, EVENT_DESTINATION, TRANSFER_EVENT_TYPES} from "./config";
+import {getPhotosMarkup} from "./utils";
 import {getMarkupEventTypeItems} from "./event-type-item";
 import {getEditAdditionalOptions} from "./additional-options";
 import AbstractComponent from "./abstract-component";
@@ -6,7 +7,7 @@ import AbstractComponent from "./abstract-component";
 export default class EventEdit extends AbstractComponent {
   constructor({type, destination, startDate, endDate, price, additionalOptions, isFavorite}) {
     super();
-    this._type = type;
+    this._type = type ? type : DEFAULT_CHECKED_TYPE;
     this._destination = destination;
     this._endDate = endDate;
     this._startDate = startDate;
@@ -21,7 +22,7 @@ export default class EventEdit extends AbstractComponent {
                 <div class="event__type-wrapper">
                   <label class="event__type  event__type-btn" for="event-type-toggle-1">
                     <span class="visually-hidden">Choose event type</span>
-                    <img class="event__type-icon" width="17" height="17" src="${ALL_EVENT_TYPES.get(this._type)[`ICON_URL`]}" alt="Event type icon">
+                    <img class="event__type-icon" width="17" height="17" src="${ALL_EVENT_TYPES.get(this._type) ? ALL_EVENT_TYPES.get(this._type)[`ICON_URL`] : ``}" alt="Event type icon">
                   </label>
                   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -44,9 +45,9 @@ export default class EventEdit extends AbstractComponent {
             
                 <div class="event__field-group  event__field-group--destination">
                   <label class="event__label  event__type-output" for="event-destination-1">
-                    ${ALL_EVENT_TYPES.get(this._type)[`TITLE`]}
+                    ${ALL_EVENT_TYPES.get(this._type) ? ALL_EVENT_TYPES.get(this._type)[`TITLE`] : ``}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._destination}" list="destination-list-1">
+                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._destination ? this._destination : ``}" list="destination-list-1">
                   <datalist id="destination-list-1">
                     ${Array.from(EVENT_DESTINATION).map((it) => `<option value="${it[0]}" ${it[0] === this._destination ? `selected` : ``}></option>`).join(``)}
                   </datalist>
@@ -56,12 +57,12 @@ export default class EventEdit extends AbstractComponent {
                   <label class="visually-hidden" for="event-start-time-1">
                     From
                   </label>
-                  <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._startDate / 1000}">
+                  <input class="event__input event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._startDate ? this._startDate / 1000 : Date.now() / 1000}">
                   &mdash;
                   <label class="visually-hidden" for="event-end-time-1">
                     To
                   </label>
-                  <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${this._endDate / 1000}">
+                  <input class="event__input event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${this._endDate ? this._endDate / 1000 : Date.now() / 1000}">
                 </div>
             
                 <div class="event__field-group  event__field-group--price">
@@ -69,7 +70,7 @@ export default class EventEdit extends AbstractComponent {
                     <span class="visually-hidden">Price</span>
                     &euro;
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${this._price}">
+                  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${this._price ? this._price : ``}">
                 </div>
             
                 <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -102,21 +103,17 @@ export default class EventEdit extends AbstractComponent {
             
                 <section class="event__section  event__section--destination">
                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                  <p class="event__destination-description">${EVENT_DESTINATION.get(this._destination).DESCRIPTION}</p>
+                  <p class="event__destination-description">${EVENT_DESTINATION.get(this._destination) ? EVENT_DESTINATION.get(this._destination).DESCRIPTION : ``}</p>
             
                   <div class="event__photos-container">
                     <div class="event__photos-tape">
 
-                      ${this.getPhotosMarkup(EVENT_DESTINATION.get(this._destination).PHOTO)}
+                      ${EVENT_DESTINATION.get(this._destination) ? getPhotosMarkup(EVENT_DESTINATION.get(this._destination).PHOTO) : ``}
 
                     </div>
                   </div>
                 </section>
               </section>
             </form>`;
-  }
-
-  getPhotosMarkup(photos) {
-    return photos.map((it) => `<img class="event__photo" src="${it}" alt="Event photo">`).join(``);
   }
 }
