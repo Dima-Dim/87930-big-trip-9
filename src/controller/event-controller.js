@@ -1,21 +1,21 @@
 import Event from "../components/event";
 import EventEdit from "../components/event-edit";
-import {ClassesElements, KeyCode, FLATPICKR_CONFIG, ALL_EVENT_TYPES, EVENT_DESTINATION} from "../components/config";
-import {getDateForEvenEditFromTimeStamp} from "../components/utils";
+import {ClassesElements, KeyCode, ALL_EVENT_TYPES, EVENT_DESTINATION} from "../components/config";
+import {getDateForEvenEditFromTimeStamp, getPhotosMarkup, useFlatpickr} from "../components/utils";
 import AbstractComponent from "../components/abstract-component";
-import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import * as RangePlugin from "flatpickr/dist/plugins/rangePlugin";
-import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 
-export default class PointController {
-  constructor(container, data, onDataChange, position) {
+export default class EventController {
+  constructor(container, data, onDataChange, globalState, position) {
     this._container = container;
     this._event = data;
     this._position = position;
     this._onDataChange = onDataChange;
-    this._flatpickr = true;
-    this._flatpickrPlugins = new Set([`range`, `confirmdate`]);
+    this._globalState = globalState;
+    this._flatpickr = {
+      active: true,
+      plugins: new Set([`range`, `confirmdate`]),
+    };
   }
 
   init() {
@@ -25,46 +25,22 @@ export default class PointController {
     const eventRollupOpenBtn = event.getElement().querySelector(`.${ClassesElements.EVENT_ROLLUP_BTN}`);
     const eventEditRollupCloseBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_ROLLUP_BTN}`);
     const eventEditInputList = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT_LIST}`);
-    const eventEditEventTypeIcon = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_ICON}`);
-    const eventEditEventTypeOutput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_OUTPUT}`);
-    const eventEditEventDestinationInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_INPUT}`);
-    const eventEditEventDestinationDescription = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_DESCRIPTION}`);
-    const eventEditEventDestinationPhotosContainer = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_PHOTOS_CONTAINER}`);
+    const eventEditTypeIcon = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_ICON}`);
+    const eventEditTypeOutput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_OUTPUT}`);
+    const eventEditDestinationInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_INPUT}`);
+    const eventEditDestinationDescription = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_DESCRIPTION}`);
+    const eventEditDestinationPhotosContainer = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_PHOTOS_CONTAINER}`);
     const eventEditOffers = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_OFFER_CHECKBOX_CONTAINER}`);
     const eventEditStartTimeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-start-time"]`);
     const eventEditEndTimeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-end-time"]`);
     const eventEditFavoriteInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_FAVORITE_INPUT}`);
     const eventEditTypeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT}`);
+    const eventEditDeleteBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DELETE_BTN}`);
 
-    const useFlatpickr = (plugins) => {
-      const flatpickrPlugins = [];
-      let replaceEndDate = true;
-      let flatpickrConfig = FLATPICKR_CONFIG;
-
-      if (plugins && plugins.includes(`confirmdate`)) {
-        flatpickrPlugins.push(new ConfirmDatePlugin({showAlways: false}));
-        flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: [new ConfirmDatePlugin({showAlways: false})]});
-      }
-
-      if (plugins && plugins.includes(`range`)) {
-        flatpickrPlugins.push(new RangePlugin({input: eventEditEndTimeInput}));
-        flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: [new RangePlugin({input: eventEditEndTimeInput})]});
-        replaceEndDate = false;
-      }
-
-      flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: flatpickrPlugins});
-
-      flatpickr(eventEditStartTimeInput, flatpickrConfig);
-
-      if (replaceEndDate) {
-        flatpickr(eventEditEndTimeInput, flatpickrConfig);
-      }
-    };
-
-    if (this._flatpickr && this._flatpickrPlugins) {
-      useFlatpickr(Array.from(this._flatpickrPlugins));
-    } else if (this._flatpickr) {
-      useFlatpickr();
+    if (this._flatpickr.active && this._flatpickr.plugins) {
+      useFlatpickr(eventEditStartTimeInput, eventEditEndTimeInput, Array.from(this._flatpickr.plugins));
+    } else if (this._flatpickr.active) {
+      useFlatpickr(eventEditStartTimeInput, eventEditEndTimeInput);
     } else {
       eventEditStartTimeInput.value = getDateForEvenEditFromTimeStamp(this._event.startDate);
       eventEditEndTimeInput.value = getDateForEvenEditFromTimeStamp(this._event.endDate);
@@ -73,17 +49,27 @@ export default class PointController {
     const closingRollupHandler = () => {
       eventEditRollupCloseBtn.removeEventListener(`click`, onClickEditRollupBtn);
       eventEditInputList.removeEventListener(`change`, onChangeEventType);
+      eventEditDestinationInput.removeEventListener(`change`, onChangeEventDescription);
       for (const input of inputs) {
         input.removeEventListener(`focus`, onFocusInput);
       }
+      eventEditDeleteBtn.removeEventListener(`click`, onClickDeleteBtn);
       eventEdit.getElement().removeEventListener(`submit`, onSubmitForm);
       this._container.replaceChild(event.getElement(), eventEdit.getElement());
       eventRollupOpenBtn.addEventListener(`click`, onClickRollupBtn);
       document.removeEventListener(`keydown`, onEscDownRollup);
-      document.removeEventListener(`click`, onClickDifferentRollupBtn);
+      this._globalState.editing = false;
     };
 
     const openingRollupHandler = () => {
+      if (this._globalState.adding) {
+        this._globalState.adding();
+        this._globalState.adding = false;
+      }
+      if (this._globalState.editing) {
+        this._globalState.editing();
+      }
+      this._globalState.editing = closingRollupHandler.bind(this);
       eventRollupOpenBtn.removeEventListener(`click`, onClickRollupBtn);
       this._container.replaceChild(eventEdit.getElement(), event.getElement());
       for (const input of inputs) {
@@ -91,10 +77,10 @@ export default class PointController {
       }
       eventEditRollupCloseBtn.addEventListener(`click`, onClickEditRollupBtn);
       eventEditInputList.addEventListener(`change`, onChangeEventType);
-      eventEditEventDestinationInput.addEventListener(`change`, onChangeEventDescription);
+      eventEditDestinationInput.addEventListener(`change`, onChangeEventDescription);
+      eventEditDeleteBtn.addEventListener(`click`, onClickDeleteBtn);
       eventEdit.getElement().addEventListener(`submit`, onSubmitForm);
       document.addEventListener(`keydown`, onEscDownRollup);
-      document.addEventListener(`click`, onClickDifferentRollupBtn);
     };
 
     const onClickRollupBtn = () => {
@@ -107,23 +93,14 @@ export default class PointController {
 
     const onChangeEventType = () => {
       const newEventType = eventEditInputList.querySelector(`input:checked`).value;
-      eventEditEventTypeIcon.src = ALL_EVENT_TYPES.get(newEventType)[`ICON_URL`];
-      eventEditEventTypeOutput.textContent = ALL_EVENT_TYPES.get(newEventType)[`TITLE`];
+      eventEditTypeIcon.src = ALL_EVENT_TYPES.get(newEventType)[`ICON_URL`];
+      eventEditTypeOutput.textContent = ALL_EVENT_TYPES.get(newEventType)[`TITLE`];
     };
 
     const onChangeEventDescription = () => {
-      const newDestination = eventEditEventDestinationInput.value;
-      eventEditEventDestinationDescription.textContent = EVENT_DESTINATION.get(newDestination).DESCRIPTION;
-      eventEditEventDestinationPhotosContainer.innerHTML = eventEdit.getPhotosMarkup(EVENT_DESTINATION.get(newDestination).PHOTO);
-    };
-
-    const onClickDifferentRollupBtn = (evt) => {
-      const target = evt.target;
-      if (!target.closest(`.${ClassesElements.EVENT_ROLLUP_BTN}`) || event.getElement().contains(target)) {
-        return;
-      }
-
-      closingRollupHandler();
+      const newDestination = eventEditDestinationInput.value;
+      eventEditDestinationDescription.textContent = EVENT_DESTINATION.get(newDestination).DESCRIPTION;
+      eventEditDestinationPhotosContainer.innerHTML = getPhotosMarkup(EVENT_DESTINATION.get(newDestination).PHOTO);
     };
 
     const onEscDownRollup = (evt) => {
@@ -157,13 +134,18 @@ export default class PointController {
         destination: form.get(`event-destination`),
         price: Number(form.get(`event-price`)),
         additionalOptions: offers,
-        startDate: this._flatpickrPlugins && this._flatpickrPlugins.has(`range`) ? Number(eventEditStartTimeInput.value.slice(0, 10) * 1000) : Number(eventEditStartTimeInput.value * 1000),
-        endDate: this._flatpickrPlugins && this._flatpickrPlugins.has(`range`) ? Number(eventEditStartTimeInput.value.slice(-10) * 1000) : Number(eventEditEndTimeInput.value * 1000),
+        startDate: this._flatpickr.plugins && this._flatpickr.plugins.has(`range`) ? Number(eventEditStartTimeInput.value.slice(0, 10) * 1000) : Number(eventEditStartTimeInput.value * 1000),
+        endDate: this._flatpickr.plugins && this._flatpickr.plugins.has(`range`) ? Number(eventEditStartTimeInput.value.slice(-10) * 1000) : Number(eventEditEndTimeInput.value * 1000),
         isFavorite: eventEditFavoriteInput.checked,
         type: eventEditTypeInput.querySelector(`input:checked`).value,
       };
 
+      closingRollupHandler();
       this._onDataChange(this._event, entry);
+    };
+
+    const onClickDeleteBtn = () => {
+      this._onDataChange(this._event, null);
     };
 
     eventRollupOpenBtn.addEventListener(`click`, onClickRollupBtn);

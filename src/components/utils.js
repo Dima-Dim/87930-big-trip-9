@@ -1,4 +1,7 @@
-import {LOCALES, TIME_FORMAT} from "./config";
+import {FLATPICKR_CONFIG, LOCALES, TIME_FORMAT} from "./config";
+import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
+import * as RangePlugin from "flatpickr/dist/plugins/rangePlugin";
+import flatpickr from "flatpickr";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -215,4 +218,33 @@ export const sortOrder = {
 export const sortOrderEvents = {
   time: (a, b) => (a.endDate - a.startDate) - (b.endDate - b.startDate),
   price: (a, b) => a.price - b.price,
+};
+
+export const getPhotosMarkup = (photos) => {
+  return photos.map((it) => `<img class="event__photo" src="${it}" alt="Event photo">`).join(``);
+};
+
+export const useFlatpickr = (startInput, endInput, plugins) => {
+  const flatpickrPlugins = [];
+  let replaceEndDate = true;
+  let flatpickrConfig = FLATPICKR_CONFIG;
+
+  if (plugins && plugins.includes(`confirmdate`)) {
+    flatpickrPlugins.push(new ConfirmDatePlugin({showAlways: false}));
+    flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: [new ConfirmDatePlugin({showAlways: false})]});
+  }
+
+  if (plugins && plugins.includes(`range`)) {
+    flatpickrPlugins.push(new RangePlugin({input: endInput}));
+    flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: [new RangePlugin({input: endInput})]});
+    replaceEndDate = false;
+  }
+
+  flatpickrConfig = Object.assign({}, flatpickrConfig, {plugins: flatpickrPlugins});
+
+  flatpickr(startInput, flatpickrConfig);
+
+  if (replaceEndDate) {
+    flatpickr(endInput, flatpickrConfig);
+  }
 };

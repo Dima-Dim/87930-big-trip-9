@@ -25,7 +25,7 @@ const getAdditionalOption = (itemId) => `
  */
 const getEditAdditionalOption = ([itemId, {NAME, PRICE}], activeItems) => `
 <div class="event__offer-selector">
-  <input class="event__offer-checkbox visually-hidden" id="event-offer-${itemId}-1" type="checkbox" name="event-offer-${itemId}" value="${itemId}" ${activeItems.has(itemId) ? `checked` : ``}>
+  <input class="event__offer-checkbox visually-hidden" id="event-offer-${itemId}-1" type="checkbox" name="event-offer-${itemId}" value="${itemId}" ${activeItems && activeItems.has(itemId) ? `checked` : ``}>
   <label class="event__offer-label" for="event-offer-${itemId}-1">
     <span class="event__offer-title">${NAME}</span>
     + € <span class="event__offer-price">${PRICE}</span>
