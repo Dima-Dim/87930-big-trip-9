@@ -76,7 +76,7 @@ export class Index {
   onChangeView(activeMenuItem) {
     this._pages.get(this._state.page).forEach((it) => it.hide());
     this._state.page = activeMenuItem;
-    this._pages.get(this._state.page).forEach((it) => it.show());
+    this._pages.get(this._state.page).forEach((it) => it.show(this._events));
   }
 
   _changeEventOrder(type = DEFAULT_SORT_EVENTS) {
