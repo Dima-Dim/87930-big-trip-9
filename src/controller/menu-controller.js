@@ -6,8 +6,6 @@ export default class MenuController {
   constructor(onChangeView) {
     this._menu = new Menu(Array.from(MENU));
     this._onChangeView = onChangeView;
-
-    this.init();
   }
 
   init() {

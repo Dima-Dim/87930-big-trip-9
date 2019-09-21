@@ -7,10 +7,10 @@ import Day from "../components/day";
 import NoDays from "../components/no-days";
 import {getDateForEventsDayListFromTimeStamp, sortOrderEvents} from "../components/utils";
 import EventController from "./event-controller";
-import Statistics from "../components/statistics";
 import MenuController from "./menu-controller";
 import DaysContainer from "../components/days-container";
 import EventAddController from "./event-add-controller";
+import StatisticsController from "./statistics-controller";
 
 export class Index {
   constructor(events) {
@@ -19,15 +19,19 @@ export class Index {
     this._sortedEvents = [];
     this._tripInfo = new TripInfo(this._days);
     this._menuController = new MenuController(this.onChangeView.bind(this));
+    this._statisticsController = new StatisticsController(`.${ClassesElements.TRIP_EVENTS}`, this._events);
     this._filters = new Filters(Array.from(FILTERS));
     this._tripSort = new TripSort(DEFAULT_SORT_EVENTS, this._onChangeTripSortItem.bind(this));
     this._daysContainer = new DaysContainer();
     this._noDays = new NoDays();
-    this._statisics = new Statistics();
     this._onDataChange = this._onDataChange.bind(this);
+    this._pages = new Map([
+      [IdElements.MENU_LINK_TABLE, [this._filters, this._daysContainer, this._tripSort]],
+      [IdElements.MENU_LINK_STATS, [this._statisticsController]],
+    ]);
     this._state = {
       sort: DEFAULT_SORT_EVENTS,
-      page: `trip`,
+      page: IdElements.MENU_LINK_TABLE,
       adding: null,
       editing: null,
     };
@@ -50,7 +54,8 @@ export class Index {
     AbstractComponent.renderElement(`.${ClassesElements.TRIP_EVENTS}`, this._daysContainer.getElement());
     this._renderDays(this._daysContainer.getElement(), Array.from(this._days));
     Index._calculationTotalCost(this._days);
-    AbstractComponent.renderElement(`.${ClassesElements.TRIP_EVENTS}`, this._statisics.getElement(), `insertAfter`);
+    this._menuController.init();
+    this._statisticsController.init();
 
     const eventAddBtn = document.querySelector(`.${ClassesElements.TRIP_EVENT_ADD}`);
 
@@ -69,23 +74,9 @@ export class Index {
   }
 
   onChangeView(activeMenuItem) {
-    switch (activeMenuItem) {
-      case IdElements.MENU_LINK_TABLE:
-        this._state.page = IdElements.MENU_LINK_TABLE;
-        this._statisics.hide();
-        this._statisics.hide();
-        this._filters.show();
-        this._daysContainer.show();
-        this._tripSort.show();
-        break;
-      case IdElements.MENU_LINK_STATS:
-        this._state.page = IdElements.MENU_LINK_STATS;
-        this._statisics.show();
-        this._filters.hide();
-        this._daysContainer.hide();
-        this._tripSort.hide();
-        break;
-    }
+    this._pages.get(this._state.page).forEach((it) => it.hide());
+    this._state.page = activeMenuItem;
+    this._pages.get(this._state.page).forEach((it) => it.show());
   }
 
   _changeEventOrder(type = DEFAULT_SORT_EVENTS) {
