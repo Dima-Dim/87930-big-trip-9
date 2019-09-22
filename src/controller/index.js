@@ -14,9 +14,9 @@ import SearchController from "./search-controller";
 import {globalState} from "../main";
 
 export class Index {
-  constructor(events = globalState.events) {
+  constructor() {
     this._events = globalState.events;
-    this._days = this._getDays(events);
+    this._days = this._getDays(this._events);
     this._sortedEvents = [];
     this._tripInfo = new TripInfo(this._days);
     this._menuController = new MenuController(this._onChangeView.bind(this));
@@ -107,7 +107,7 @@ export class Index {
 
   _renderDays(container, days, position) {
     if (days.length) {
-      this._tripSort.init();
+      this._tripSort.show();
 
       for (const it of days) {
         const day = new Day(it);
