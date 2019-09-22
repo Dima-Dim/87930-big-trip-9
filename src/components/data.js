@@ -20,7 +20,7 @@ const dateState = {
   },
 };
 
-dateState.startTimeStamp = Date.now();
+dateState.startTimeStamp = Date.now() - (getRandomIntegerBetween(1, 60) * getRandomIntegerBetween(1, 60) * getRandomIntegerBetween(1, 24) * getRandomIntegerBetween(1, 20) * 1000);
 
 /**
  * Функция возвращающая демо-данные о точках маршрута

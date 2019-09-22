@@ -2,6 +2,7 @@ import {FLATPICKR_CONFIG, LOCALES, TIME_FORMAT} from "./config";
 import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 import * as RangePlugin from "flatpickr/dist/plugins/rangePlugin";
 import flatpickr from "flatpickr";
+import {globalState} from "../main";
 
 /**
  * Функция, преобразующая timestamp в объект даты
@@ -247,4 +248,24 @@ export const useFlatpickr = (startInput, endInput, plugins) => {
   if (replaceEndDate) {
     flatpickr(endInput, flatpickrConfig);
   }
+};
+
+export const eventsFiltering = (filterName) => {
+  let filteredEvents = null;
+
+  switch (filterName) {
+    case `everything`:
+      filteredEvents = globalState.events;
+      break;
+
+    case `future`:
+      filteredEvents = globalState.events.filter((it) => it.startDate > Date.now());
+      break;
+
+    case `past`:
+      filteredEvents = globalState.events.filter((it) => it.startDate < Date.now());
+      break;
+  }
+
+  return filteredEvents;
 };

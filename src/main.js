@@ -3,6 +3,10 @@ import {sortOrder} from "./components/utils";
 import {Index} from "./controller";
 import {getEventData} from "./components/data";
 
+export const globalState = {
+  events: [],
+};
+
 /**
  * Функция для получения массива ивентов
  *
@@ -12,5 +16,7 @@ import {getEventData} from "./components/data";
  */
 const getEvents = (count) => new Array(count).fill(``).map(getEventData).sort((a, b) => sortOrder.asc(a, b, `startDate`));
 
-const start = new Index(getEvents(ALL_EVENT_COUNT));
+globalState.events = getEvents(ALL_EVENT_COUNT);
+
+const start = new Index();
 start.init();
