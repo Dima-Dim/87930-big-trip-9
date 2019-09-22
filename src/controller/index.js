@@ -128,15 +128,17 @@ export class Index {
   }
 
   _onDataChange(currentData, newData) {
-    const eventId = this._events.findIndex((it) => it === currentData);
+    const eventId = globalState.events.findIndex((it) => it === currentData);
 
     if (!newData) {
-      this._events = [...this._events.slice(0, eventId), ...this._events.slice(eventId + 1)];
+      globalState.events = [...globalState.events.slice(0, eventId), ...globalState.events.slice(eventId + 1)];
     } else if (!currentData) {
-      this._events.push(newData);
+      globalState.events.push(newData);
     } else {
-      this._events[eventId] = newData;
+      globalState.events[eventId] = newData;
     }
+
+    this._events = globalState.events;
 
     this._days = this._getDays(this._events);
     this._changeEventOrder();
