@@ -269,3 +269,9 @@ export const eventsFiltering = (filterName) => {
 
   return filteredEvents;
 };
+
+export const updateChart = (chart, labels, data) => {
+  chart.data.labels = labels;
+  chart.data.datasets.data = data;
+  chart.update();
+};

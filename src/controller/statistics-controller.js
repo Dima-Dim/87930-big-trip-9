@@ -1,6 +1,7 @@
-import Statistics from "../components/statistics";
-import AbstractComponent from "../components/abstract-component";
 import {ACTIVITY_EVENT_TYPES, ClassesElements} from "../components/config";
+import {updateChart} from "../components/utils";
+import AbstractComponent from "../components/abstract-component";
+import Statistics from "../components/statistics";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -15,6 +16,7 @@ export default class StatisticsController {
       transport: {},
       time: {},
     };
+    this._charts = new Map();
   }
 
   init() {
@@ -79,42 +81,50 @@ export default class StatisticsController {
     const ctxTags = canvas.getContext(`2d`);
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
 
-    return new Chart(ctxTags, {
-      type: `horizontalBar`,
-      plugins: [ChartDataLabels],
-      data: {
-        labels: sourceDataForChart[0],
-        datasets: [{
-          data: sourceDataForChart[1],
-          backgroundColor: [
-            `rgba(255, 99, 132, 0.3)`,
-            `rgba(54, 162, 235, 0.3)`,
-            `rgba(255, 206, 86, 0.3)`,
-            `rgba(75, 192, 192, 0.3)`,
-            `rgba(153, 102, 255, 0.3)`,
-            `rgba(255, 159, 64, 0.3)`,
-          ],
-          borderColor: [
-            `rgba(255, 99, 132, 1)`,
-            `rgba(54, 162, 235, 1)`,
-            `rgba(255, 206, 86, 1)`,
-            `rgba(75, 192, 192, 1)`,
-            `rgba(153, 102, 255, 1)`,
-            `rgba(255, 159, 64, 1)`,
-          ],
-          borderWidth: 1
-        }],
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            anchor: `end`,
-            align: `end`,
-            offset: -50,
-            formatter: (value) => `€ ${value}`
-          },
+    if (this._charts.has(`money`)) {
+      updateChart(this._charts.get(`money`), sourceDataForChart[0], sourceDataForChart[1]);
+    } else {
+      const moneyChart = new Chart(ctxTags, {
+        type: `horizontalBar`,
+        plugins: [ChartDataLabels],
+        data: {
+          labels: sourceDataForChart[0],
+          datasets: [{
+            data: sourceDataForChart[1],
+            backgroundColor: [
+              `rgba(255, 99, 132, 0.3)`,
+              `rgba(54, 162, 235, 0.3)`,
+              `rgba(255, 206, 86, 0.3)`,
+              `rgba(75, 192, 192, 0.3)`,
+              `rgba(153, 102, 255, 0.3)`,
+              `rgba(255, 159, 64, 0.3)`,
+            ],
+            borderColor: [
+              `rgba(255, 99, 132, 1)`,
+              `rgba(54, 162, 235, 1)`,
+              `rgba(255, 206, 86, 1)`,
+              `rgba(75, 192, 192, 1)`,
+              `rgba(153, 102, 255, 1)`,
+              `rgba(255, 159, 64, 1)`,
+            ],
+            borderWidth: 1
+          }],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              anchor: `end`,
+              align: `end`,
+              offset: -50,
+              formatter: (value) => `€ ${value}`
+            },
+          }
         }
-      }
-    });
+      });
+
+      this._charts.set(`money`, moneyChart);
+    }
+
+    return this._charts.money;
   }
 }
