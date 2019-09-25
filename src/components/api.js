@@ -14,6 +14,11 @@ export default class Api {
       .then(EventsAdapter.parseEvents);
   }
 
+  getDestination() {
+    return this._load({path: ApiData.DESTINATIONS})
+      .then(fromJSON);
+  }
+
   createEvent(event) {
     return this._load({
       path: ApiData.POINTS,

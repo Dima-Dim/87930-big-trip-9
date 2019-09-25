@@ -222,7 +222,7 @@ export const sortOrderEvents = {
 };
 
 export const getPhotosMarkup = (photos) => {
-  return photos.map((it) => `<img class="event__photo" src="${it.src}" alt="${it.description}>`).join(``);
+  return photos.map((it) => `<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``);
 };
 
 export const useFlatpickr = (startInput, endInput, plugins) => {

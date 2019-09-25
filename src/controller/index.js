@@ -37,7 +37,6 @@ export class Index {
       editing: null,
     };
 
-    console.log(this._events);
 
     this.init();
   }

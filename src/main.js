@@ -1,20 +1,27 @@
-import {ApiData, ALL_EVENT_COUNT} from "./components/config";
-import {sortOrder} from "./components/utils";
+import {ApiData} from "./components/config";
 import {Index} from "./controller";
-import {getEventData} from "./components/data";
 import Api from "./components/api";
 
 export const globalState = {
   api: new Api(ApiData),
   events: null,
+  destinations: null,
 
   addEvents(events) {
     this.events = events;
+  },
+
+  addDestinations(destinations) {
+    this.destinations = destinations;
   }
+
+
 };
 
 globalState.api.getEvents()
   .then((events) => globalState.addEvents(events))
+  .then(() => globalState.api.getDestination()
+    .then((events) => globalState.addDestinations(events)))
   .then(() => new Index());
 
 /**
