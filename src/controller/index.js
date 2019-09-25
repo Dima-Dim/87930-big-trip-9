@@ -36,6 +36,10 @@ export class Index {
       adding: null,
       editing: null,
     };
+
+    console.log(this._events);
+
+    this.init();
   }
 
   _getDays(events) {

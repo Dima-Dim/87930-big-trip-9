@@ -1,5 +1,25 @@
 import {getRandomElementsFromArray, getRandomIntegerBetween, getEventPhoto} from "./utils";
 
+export const HTTPMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`,
+};
+
+export const HTTPHeaders = {
+  JSON: {'Content-Type': `application/json`},
+};
+
+export const ApiData = {
+  HOST: `https://htmlacademy-es-9.appspot.com/big-trip/`,
+  AUTHORIZATION: `Basic 3L8w3Q3c7L6l8N6p7N5u9D5d`,
+  POINTS: `points`,
+  DESTINATIONS: `destinations`,
+  OFFERS: `offers`,
+};
+
+
 export const ALL_EVENT_COUNT = 4;
 const DESCRIPTION_LENGTH = 3;
 const MIN_NUMBER_OF_PHOTO = 1;

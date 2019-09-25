@@ -1,4 +1,4 @@
-import {ADDITIONAL_OPTIONS} from "./config";
+// import {ADDITIONAL_OPTIONS} from "./config";
 
 /**
  * Функция, возвращающая разметку дополнительной опции события
@@ -7,10 +7,10 @@ import {ADDITIONAL_OPTIONS} from "./config";
  *
  * @return {string} HTML-код
  */
-const getAdditionalOption = (itemId) => `
+const getAdditionalOption = ({title, price}) => `
 <li class="event__offer">
-  <span class="event__offer-title">${ADDITIONAL_OPTIONS.get(itemId)[`NAME`]}</span>
-  + € <span class="event__offer-price">${ADDITIONAL_OPTIONS.get(itemId)[`PRICE`]}</span>
+  <span class="event__offer-title">${title}</span>
+  + € <span class="event__offer-price">${price}</span>
 </li>`;
 
 /**
@@ -23,29 +23,29 @@ const getAdditionalOption = (itemId) => `
  *
  * @return {string} HTML-код
  */
-const getEditAdditionalOption = ([itemId, {NAME, PRICE}], activeItems) => `
+const getEditAdditionalOption = ({title, price, accepted}) => `
 <div class="event__offer-selector">
-  <input class="event__offer-checkbox visually-hidden" id="event-offer-${itemId}-1" type="checkbox" name="event-offer-${itemId}" value="${itemId}" ${activeItems && activeItems.has(itemId) ? `checked` : ``}>
-  <label class="event__offer-label" for="event-offer-${itemId}-1">
-    <span class="event__offer-title">${NAME}</span>
-    + € <span class="event__offer-price">${PRICE}</span>
+  <input class="event__offer-checkbox visually-hidden" id="event-offer-${title}-1" type="checkbox" name="event-offer-${title}" value="${title}" ${accepted ? `checked` : ``}>
+  <label class="event__offer-label" for="event-offer-${title}-1">
+    <span class="event__offer-title">${title}</span>
+    + € <span class="event__offer-price">${price}</span>
   </label>
 </div>`;
 
 /**
  * Функция, возвращающая разметку блока дополнительных опции события
  *
- * @param {Set} items коллекция активных опций события
+ * @param {Array} items массив всех возможных опций события
  *
  * @return {string} HTML-код
  */
-export const getAdditionalOptions = (items) => Array.from(items).map((it) => getAdditionalOption(it)).join(``);
+export const getAdditionalOptions = (items) => items.filter((it) => it.accepted).map((it) => getAdditionalOption(it)).join(``);
 
 /**
  * Функция, возвращающая разметку блока дополнительных опции для редактирования события
  *
- * @param {Set} items коллекция активных опций события
+ * @param {Array} items массив всех возможных опций события
  *
  * @return {string} HTML-код
  */
-export const getEditAdditionalOptions = (items) => Array.from(ADDITIONAL_OPTIONS).map((it) => getEditAdditionalOption(it, items)).join(``);
+export const getEditAdditionalOptions = (items) => items.map((it) => getEditAdditionalOption(it)).join(``);
