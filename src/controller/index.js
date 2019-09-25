@@ -91,6 +91,8 @@ export class Index {
   }
 
   _changeEventOrder(type = DEFAULT_SORT_EVENTS) {
+    this._events = globalState.events;
+    this._days = this._getDays(this._events);
     this._daysContainer.getElement().textContent = ``;
     this._sortedEvents = [];
 
@@ -131,20 +133,28 @@ export class Index {
   }
 
   _onDataChange(currentData, newData) {
-    const eventId = globalState.events.findIndex((it) => it === currentData);
-
     if (!newData) {
-      globalState.events = [...globalState.events.slice(0, eventId), ...globalState.events.slice(eventId + 1)];
+      globalState.api.deleteEvent(currentData.id)
+        .then(() => globalState.api.getEvents())
+        .then((events) => globalState.addEvents(events))
+        .then(() => this._changeEventOrder());
     } else if (!currentData) {
-      globalState.events.push(newData);
+      globalState.api.createEvent(newData)
+        .then(() => globalState.api.getEvents())
+        .then((events) => globalState.addEvents(events))
+        .then(() => this._changeEventOrder());
     } else {
-      globalState.events[eventId] = newData;
+      newData.id = currentData.id;
+      globalState.api.updateEvent(newData)
+        .then(() => globalState.api.getEvents())
+        .then((events) => globalState.addEvents(events))
+        .then(() => this._changeEventOrder());
     }
 
     this._events = globalState.events;
 
     this._days = this._getDays(this._events);
-    this._changeEventOrder();
+    // this._changeEventOrder();
     this._state.editing = null;
     this._state.adding = null;
   }

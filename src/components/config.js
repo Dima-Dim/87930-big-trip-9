@@ -12,7 +12,7 @@ export const HTTPHeaders = {
 };
 
 export const ApiData = {
-  HOST: `https://htmlacademy-es-9.appspot.com/big-trip/`,
+  HOST: `https://htmlacademy-es-9.appspot.com/big-trip`,
   AUTHORIZATION: `Basic 3L8w3Q3c7L6l8N6p7N5u9D5d`,
   POINTS: `points`,
   DESTINATIONS: `destinations`,

@@ -1,3 +1,5 @@
+import {globalState} from "../main";
+
 export default class EventsAdapter {
   constructor(data) {
     this.id = data[`id`];
@@ -16,5 +18,23 @@ export default class EventsAdapter {
 
   static parseEvents(data) {
     return data.map(EventsAdapter.parseEvent);
+  }
+
+  static toSource(data) {
+    const destination = globalState.destinations.find((it) => it.name === data.destination);
+    return {
+      'id': data.id,
+      'type': data.type,
+      'destination': {
+        'description': destination.description,
+        'name': data.destination,
+        'pictures': destination.pictures,
+      },
+      'base_price': data.price,
+      'date_from': data.startDate,
+      'date_to': data.endDate,
+      'is_favorite': data.isFavorite,
+      'offers': globalState.offers.filter((it) => it.type === data.type)[0][`offers`].filter((it) => data.additionalOptions.has(it.name)),
+    };
   }
 }

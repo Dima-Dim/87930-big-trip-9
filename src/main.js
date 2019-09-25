@@ -13,15 +13,19 @@ export const globalState = {
 
   addDestinations(destinations) {
     this.destinations = destinations;
-  }
+  },
 
-
+  addOffers(offers) {
+    this.offers = offers;
+  },
 };
 
 globalState.api.getEvents()
   .then((events) => globalState.addEvents(events))
   .then(() => globalState.api.getDestination()
-    .then((events) => globalState.addDestinations(events)))
+    .then((destinations) => globalState.addDestinations(destinations)))
+  .then(() => globalState.api.getOffers()
+    .then((offers) => globalState.addOffers(offers)))
   .then(() => new Index());
 
 /**

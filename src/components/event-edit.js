@@ -1,8 +1,9 @@
-import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, DEFAULT_CHECKED_TYPE, EVENT_DESTINATION, TRANSFER_EVENT_TYPES} from "./config";
+import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, DEFAULT_CHECKED_TYPE, TRANSFER_EVENT_TYPES} from "./config";
 import {getPhotosMarkup} from "./utils";
 import {getMarkupEventTypeItems} from "./event-type-item";
 import {getEditAdditionalOptions} from "./additional-options";
 import AbstractComponent from "./abstract-component";
+import {globalState} from "../main";
 
 export default class EventEdit extends AbstractComponent {
   constructor({type, destination, startDate, endDate, price, additionalOptions, isFavorite}) {
@@ -49,7 +50,7 @@ export default class EventEdit extends AbstractComponent {
                   </label>
                   <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._destination.name ? this._destination.name : ``}" list="destination-list-1">
                   <datalist id="destination-list-1">
-                    ${Array.from(EVENT_DESTINATION).map((it) => `<option value="${it[0]}" ${it[0] === this._destination.name ? `selected` : ``}></option>`).join(``)}
+                    ${globalState.destinations.map((it) => `<option value="${it[`name`]}" ${it[`name`] === this._destination.name ? `selected` : ``}></option>`).join(``)}
                   </datalist>
                 </div>
             
@@ -96,7 +97,7 @@ export default class EventEdit extends AbstractComponent {
             
                   <div class="event__available-offers">
                   
-                  ${getEditAdditionalOptions(this._additionalOptions)}
+                  ${getEditAdditionalOptions(this._type, this._additionalOptions)}
                   
                   </div>
                 </section>

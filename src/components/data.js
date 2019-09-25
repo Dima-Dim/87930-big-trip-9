@@ -1,5 +1,6 @@
 import {ALL_EVENT_TYPES, EVENT_DESTINATION, ADDITIONAL_OPTIONS} from "./config";
 import {getRandomIntegerBetween} from "./utils";
+import {globalState} from "../main";
 
 const MIN_PRICE = 1;
 const MAX_PRICE = 500;
@@ -46,11 +47,11 @@ export const getEventData = () => ({
 });
 
 export const getEventDefaultData = () => ({
-  type: null,
-  destination: Array.from(EVENT_DESTINATION)[0][0],
+  type: globalState.offers[0].type,
+  destination: globalState.destinations[0],
   startDate: Date.now(),
   endDate: Date.now(),
   price: 1,
-  additionalOptions: null,
+  additionalOptions: globalState.offers[0].offers,
   isFavorite: false,
 });

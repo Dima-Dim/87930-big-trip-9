@@ -19,6 +19,11 @@ export default class Api {
       .then(fromJSON);
   }
 
+  getOffers() {
+    return this._load({path: ApiData.OFFERS})
+      .then(fromJSON);
+  }
+
   createEvent(event) {
     return this._load({
       path: ApiData.POINTS,
@@ -30,18 +35,16 @@ export default class Api {
       .then(EventsAdapter.parseEvent);
   }
 
-  updateEvents(event) {
+  updateEvent(event) {
     return this._load({
       path: `${ApiData.POINTS}/${event.id}`,
       method: HTTPMethod.PUT,
       body: JSON.stringify(EventsAdapter.toSource(event)),
       headers: new Headers(HTTPHeaders.JSON)
-    })
-      .then(fromJSON)
-      .then(EventsAdapter.parseEvent);
+    });
   }
 
-  deleteEvent({id}) {
+  deleteEvent(id) {
     return this._load({
       path: `${ApiData.POINTS}/${id}`,
       method: HTTPMethod.DELETE,
