@@ -1,33 +1,38 @@
 import {DEFAULT_SORT_EVENTS, SORT_ID_PREFIX, ADDITIONAL_OPTIONS, IdElements, ClassesElements, FILTERS} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import TripInfo from "../components/trip-info";
-import Filters from "../components/filter";
 import TripSort from "../components/trip-sort";
 import Day from "../components/day";
 import NoDays from "../components/no-days";
-import {getDateForEventsDayListFromTimeStamp, sortOrderEvents} from "../components/utils";
+import {getDateForEventsDayListFromTimeStamp, sortOrderEvents, eventsFiltering} from "../components/utils";
 import EventController from "./event-controller";
-import Statistics from "../components/statistics";
 import MenuController from "./menu-controller";
 import DaysContainer from "../components/days-container";
 import EventAddController from "./event-add-controller";
+import StatisticsController from "./statistics-controller";
+import SearchController from "./search-controller";
+import {globalState} from "../main";
 
 export class Index {
-  constructor(events) {
-    this._events = events;
-    this._days = this._getDays(events);
+  constructor() {
+    this._events = globalState.events;
+    this._days = this._getDays(this._events);
     this._sortedEvents = [];
     this._tripInfo = new TripInfo(this._days);
-    this._menuController = new MenuController(this.onChangeView.bind(this));
-    this._filters = new Filters(Array.from(FILTERS));
+    this._menuController = new MenuController(this._onChangeView.bind(this));
+    this._statisticsController = new StatisticsController(`.${ClassesElements.TRIP_EVENTS}`, this._events);
+    this._search = new SearchController(Array.from(FILTERS), this._onChangeView.bind(this));
     this._tripSort = new TripSort(DEFAULT_SORT_EVENTS, this._onChangeTripSortItem.bind(this));
     this._daysContainer = new DaysContainer();
     this._noDays = new NoDays();
-    this._statisics = new Statistics();
     this._onDataChange = this._onDataChange.bind(this);
+    this._pages = new Map([
+      [IdElements.MENU_LINK_TABLE, [this._search.filters(), this._daysContainer, this._tripSort]],
+      [IdElements.MENU_LINK_STATS, [this._statisticsController]],
+    ]);
     this._state = {
       sort: DEFAULT_SORT_EVENTS,
-      page: `trip`,
+      page: IdElements.MENU_LINK_TABLE,
       adding: null,
       editing: null,
     };
@@ -46,11 +51,12 @@ export class Index {
 
   init() {
     AbstractComponent.renderElement(`.${ClassesElements.TRIP_INFO}`, this._tripInfo.getElement(), `prepend`);
-    AbstractComponent.renderElement(`.${ClassesElements.TRIP_CONTROLS}`, this._filters.getElement());
+    AbstractComponent.renderElement(`.${ClassesElements.TRIP_CONTROLS}`, this._search.filters().getElement());
     AbstractComponent.renderElement(`.${ClassesElements.TRIP_EVENTS}`, this._daysContainer.getElement());
     this._renderDays(this._daysContainer.getElement(), Array.from(this._days));
     Index._calculationTotalCost(this._days);
-    AbstractComponent.renderElement(`.${ClassesElements.TRIP_EVENTS}`, this._statisics.getElement(), `insertAfter`);
+    this._menuController.init();
+    this._statisticsController.init();
 
     const eventAddBtn = document.querySelector(`.${ClassesElements.TRIP_EVENT_ADD}`);
 
@@ -68,23 +74,16 @@ export class Index {
     eventAddBtn.addEventListener(`click`, onClickEventAddBtn);
   }
 
-  onChangeView(activeMenuItem) {
-    switch (activeMenuItem) {
-      case IdElements.MENU_LINK_TABLE:
-        this._state.page = IdElements.MENU_LINK_TABLE;
-        this._statisics.hide();
-        this._statisics.hide();
-        this._filters.show();
-        this._daysContainer.show();
-        this._tripSort.show();
-        break;
-      case IdElements.MENU_LINK_STATS:
-        this._state.page = IdElements.MENU_LINK_STATS;
-        this._statisics.show();
-        this._filters.hide();
-        this._daysContainer.hide();
-        this._tripSort.hide();
-        break;
+  _onChangeView(activeMenuItem, searchData) {
+    if (searchData) {
+      this._days = this._getDays(eventsFiltering(searchData));
+      this._changeEventOrder();
+    }
+
+    if (activeMenuItem) {
+      this._pages.get(this._state.page).forEach((it) => it.hide());
+      this._state.page = activeMenuItem;
+      this._pages.get(this._state.page).forEach((it) => it.show(this._events));
     }
   }
 
@@ -108,7 +107,7 @@ export class Index {
 
   _renderDays(container, days, position) {
     if (days.length) {
-      this._tripSort.init();
+      this._tripSort.show();
 
       for (const it of days) {
         const day = new Day(it);
@@ -129,15 +128,17 @@ export class Index {
   }
 
   _onDataChange(currentData, newData) {
-    const eventId = this._events.findIndex((it) => it === currentData);
+    const eventId = globalState.events.findIndex((it) => it === currentData);
 
     if (!newData) {
-      this._events = [...this._events.slice(0, eventId), ...this._events.slice(eventId + 1)];
+      globalState.events = [...globalState.events.slice(0, eventId), ...globalState.events.slice(eventId + 1)];
     } else if (!currentData) {
-      this._events.push(newData);
+      globalState.events.push(newData);
     } else {
-      this._events[eventId] = newData;
+      globalState.events[eventId] = newData;
     }
+
+    this._events = globalState.events;
 
     this._days = this._getDays(this._events);
     this._changeEventOrder();

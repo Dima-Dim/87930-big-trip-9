@@ -7,6 +7,8 @@ export default class TripSort extends AbstractComponent {
     super();
     this._sortType = sortType;
     this._onChangeTripSortItem = onChangeTripSortItem;
+
+    this.init();
   }
 
   _renderSortItems(sortType = this._sortType) {

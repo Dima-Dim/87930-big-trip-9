@@ -7,6 +7,7 @@ const MAX_NUMBER_OF_PHOTO = 5;
 export const DEFAULT_CHECKED_TYPE = `flight`;
 export const DEFAULT_SORT_EVENTS = `sort-event`;
 export const SORT_ID_PREFIX = `sort-`;
+export const FILTER_ID_PREFIX = `filter-`;
 const descriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`,
@@ -188,6 +189,9 @@ export const ClassesElements = {
   EVENT_TYPE_INPUT: `event__type-list`,
   EVENT_ROLLUP_BTN: `event__rollup-btn`,
   EVENT_DELETE_BTN: `event__reset-btn`,
+  STATISTICS_MONEY: `statistics__chart--money`,
+  STATISTICS_TRANSPORT: `statistics__chart--transport`,
+  STATISTICS_TIME: `statistics__chart--time`,
 };
 
 export const KeyCode = {
