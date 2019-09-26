@@ -222,7 +222,7 @@ export const sortOrderEvents = {
 };
 
 export const getPhotosMarkup = (photos) => {
-  return photos.map((it) => `<img class="event__photo" src="${it}" alt="Event photo">`).join(``);
+  return photos.map((it) => `<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``);
 };
 
 export const useFlatpickr = (startInput, endInput, plugins) => {
@@ -274,4 +274,16 @@ export const updateChart = (chart, labels, data) => {
   chart.data.labels = labels;
   chart.data.datasets.data = data;
   chart.update();
+};
+
+export const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
+export const fromJSON = (response) => {
+  return response.json();
 };

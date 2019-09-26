@@ -1,17 +1,18 @@
 import Event from "../components/event";
 import EventEdit from "../components/event-edit";
-import {ClassesElements, KeyCode, ALL_EVENT_TYPES, EVENT_DESTINATION} from "../components/config";
+import {ClassesElements, KeyCode, ALL_EVENT_TYPES} from "../components/config";
 import {getDateForEvenEditFromTimeStamp, getPhotosMarkup, useFlatpickr} from "../components/utils";
 import AbstractComponent from "../components/abstract-component";
 import "flatpickr/dist/flatpickr.min.css";
+import {globalState} from "../main";
 
 export default class EventController {
-  constructor(container, data, onDataChange, globalState, position) {
+  constructor(container, data, onDataChange, indexState, position) {
     this._container = container;
     this._event = data;
     this._position = position;
     this._onDataChange = onDataChange;
-    this._globalState = globalState;
+    this._indexState = indexState;
     this._flatpickr = {
       active: true,
       plugins: new Set([`range`, `confirmdate`]),
@@ -58,18 +59,18 @@ export default class EventController {
       this._container.replaceChild(event.getElement(), eventEdit.getElement());
       eventRollupOpenBtn.addEventListener(`click`, onClickRollupBtn);
       document.removeEventListener(`keydown`, onEscDownRollup);
-      this._globalState.editing = false;
+      this._indexState.editing = false;
     };
 
     const openingRollupHandler = () => {
-      if (this._globalState.adding) {
-        this._globalState.adding();
-        this._globalState.adding = false;
+      if (this._indexState.adding) {
+        this._indexState.adding();
+        this._indexState.adding = false;
       }
-      if (this._globalState.editing) {
-        this._globalState.editing();
+      if (this._indexState.editing) {
+        this._indexState.editing();
       }
-      this._globalState.editing = closingRollupHandler.bind(this);
+      this._indexState.editing = closingRollupHandler.bind(this);
       eventRollupOpenBtn.removeEventListener(`click`, onClickRollupBtn);
       this._container.replaceChild(eventEdit.getElement(), event.getElement());
       for (const input of inputs) {
@@ -99,8 +100,9 @@ export default class EventController {
 
     const onChangeEventDescription = () => {
       const newDestination = eventEditDestinationInput.value;
-      eventEditDestinationDescription.textContent = EVENT_DESTINATION.get(newDestination).DESCRIPTION;
-      eventEditDestinationPhotosContainer.innerHTML = getPhotosMarkup(EVENT_DESTINATION.get(newDestination).PHOTO);
+      const destinationInfo = globalState.destinations.find((it) => it.name === newDestination);
+      eventEditDestinationDescription.textContent = destinationInfo.description;
+      eventEditDestinationPhotosContainer.innerHTML = getPhotosMarkup(destinationInfo.pictures);
     };
 
     const onEscDownRollup = (evt) => {

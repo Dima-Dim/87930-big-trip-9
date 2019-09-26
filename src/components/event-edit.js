@@ -1,8 +1,9 @@
-import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, DEFAULT_CHECKED_TYPE, EVENT_DESTINATION, TRANSFER_EVENT_TYPES} from "./config";
+import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, DEFAULT_CHECKED_TYPE, TRANSFER_EVENT_TYPES} from "./config";
 import {getPhotosMarkup} from "./utils";
 import {getMarkupEventTypeItems} from "./event-type-item";
 import {getEditAdditionalOptions} from "./additional-options";
 import AbstractComponent from "./abstract-component";
+import {globalState} from "../main";
 
 export default class EventEdit extends AbstractComponent {
   constructor({type, destination, startDate, endDate, price, additionalOptions, isFavorite}) {
@@ -47,9 +48,9 @@ export default class EventEdit extends AbstractComponent {
                   <label class="event__label  event__type-output" for="event-destination-1">
                     ${ALL_EVENT_TYPES.get(this._type) ? ALL_EVENT_TYPES.get(this._type)[`TITLE`] : ``}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._destination ? this._destination : ``}" list="destination-list-1">
+                  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._destination.name ? this._destination.name : ``}" list="destination-list-1">
                   <datalist id="destination-list-1">
-                    ${Array.from(EVENT_DESTINATION).map((it) => `<option value="${it[0]}" ${it[0] === this._destination ? `selected` : ``}></option>`).join(``)}
+                    ${globalState.destinations.map((it) => `<option value="${it[`name`]}" ${it[`name`] === this._destination.name ? `selected` : ``}></option>`).join(``)}
                   </datalist>
                 </div>
             
@@ -96,19 +97,19 @@ export default class EventEdit extends AbstractComponent {
             
                   <div class="event__available-offers">
                   
-                  ${getEditAdditionalOptions(this._additionalOptions)}
+                  ${getEditAdditionalOptions(this._type, this._additionalOptions)}
                   
                   </div>
                 </section>
             
                 <section class="event__section  event__section--destination">
                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                  <p class="event__destination-description">${EVENT_DESTINATION.get(this._destination) ? EVENT_DESTINATION.get(this._destination).DESCRIPTION : ``}</p>
+                  <p class="event__destination-description">${this._destination.description}</p>
             
                   <div class="event__photos-container">
                     <div class="event__photos-tape">
-
-                      ${EVENT_DESTINATION.get(this._destination) ? getPhotosMarkup(EVENT_DESTINATION.get(this._destination).PHOTO) : ``}
+                      
+                      ${this._destination.pictures ? getPhotosMarkup(this._destination.pictures) : ``}
 
                     </div>
                   </div>

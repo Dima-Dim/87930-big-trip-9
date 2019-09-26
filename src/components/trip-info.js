@@ -12,11 +12,11 @@ const MAX_NUMBER_CITY_IN_TRIP_INFO = 3;
  * @return {Array} Массива городов в которых происходят события
  */
 const makeTripCities = (events) => {
-  const tripCities = new Set();
+  const tripCities = [];
 
   for (const i of events) {
     for (const j of i[1]) {
-      tripCities.add(j[`destination`]);
+      tripCities.push(j[`destination`][`name`]);
     }
   }
 
@@ -67,7 +67,7 @@ const makeTripInfoStartEndTripDate = (firstDayEvents, lastDayEvents) => {
   if (startMonth === endMonth) {
     newStr += `${startMonth.substr(0, MONTH_NAME_LENGTH)} ${startDay} — ${endDay}`;
   } else {
-    newStr += `${startDay}${startMonth.substr(0, MONTH_NAME_LENGTH)} — ${startDay}${startMonth.substr(0, MONTH_NAME_LENGTH)}`;
+    newStr += `${startDay}${startMonth.substr(0, MONTH_NAME_LENGTH)} — ${endDay}${endMonth.substr(0, MONTH_NAME_LENGTH)}`;
   }
 
   return newStr;

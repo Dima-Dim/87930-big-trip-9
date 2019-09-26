@@ -1,51 +1,52 @@
-import {ADDITIONAL_OPTIONS} from "./config";
+import {globalState} from "../main";
 
 /**
  * Функция, возвращающая разметку дополнительной опции события
  *
- * @param {string} itemId Id дополнительной опции
+ * @param {string} title название опции события
+ * @param {string} price стоимость дополнительной опции
  *
  * @return {string} HTML-код
  */
-const getAdditionalOption = (itemId) => `
+const getAdditionalOption = ({title, price}) => `
 <li class="event__offer">
-  <span class="event__offer-title">${ADDITIONAL_OPTIONS.get(itemId)[`NAME`]}</span>
-  + € <span class="event__offer-price">${ADDITIONAL_OPTIONS.get(itemId)[`PRICE`]}</span>
+  <span class="event__offer-title">${title}</span>
+  + € <span class="event__offer-price">${price}</span>
 </li>`;
 
 /**
  * Функция, возвращающая разметку для дополнительной опции при редактировании события
  *
- * @param {string} itemId Id дополнительной опции
- * @param {Set} activeItems коллекция активных опций события
- * @param {string} NAME название дополнительной опции
- * @param {number} PRICE стоимость дополнительной опции
+ * @param {string} title название опции события
+ * @param {Set} items активна ли опция
+ * @param {string} price стоимость дополнительной опции
  *
  * @return {string} HTML-код
  */
-const getEditAdditionalOption = ([itemId, {NAME, PRICE}], activeItems) => `
+const getEditAdditionalOption = ({title, price}, items) => `
 <div class="event__offer-selector">
-  <input class="event__offer-checkbox visually-hidden" id="event-offer-${itemId}-1" type="checkbox" name="event-offer-${itemId}" value="${itemId}" ${activeItems && activeItems.has(itemId) ? `checked` : ``}>
-  <label class="event__offer-label" for="event-offer-${itemId}-1">
-    <span class="event__offer-title">${NAME}</span>
-    + € <span class="event__offer-price">${PRICE}</span>
+  <input class="event__offer-checkbox visually-hidden" id="event-offer-${title}-1" type="checkbox" name="event-offer-${title}" value="${title}" ${items.has(title) ? `checked` : ``}>
+  <label class="event__offer-label" for="event-offer-${title}-1">
+    <span class="event__offer-title">${title}</span>
+    + € <span class="event__offer-price">${price}</span>
   </label>
 </div>`;
 
 /**
  * Функция, возвращающая разметку блока дополнительных опции события
  *
- * @param {Set} items коллекция активных опций события
+ * @param {Array} items массив всех возможных опций события
  *
  * @return {string} HTML-код
  */
-export const getAdditionalOptions = (items) => Array.from(items).map((it) => getAdditionalOption(it)).join(``);
+export const getAdditionalOptions = (items) => items.filter((it) => it.accepted).map((it) => getAdditionalOption(it)).join(``);
 
 /**
  * Функция, возвращающая разметку блока дополнительных опции для редактирования события
  *
- * @param {Set} items коллекция активных опций события
+ * @param {string} type тип события
+ * @param {Array} items массив всех возможных опций события
  *
  * @return {string} HTML-код
  */
-export const getEditAdditionalOptions = (items) => Array.from(ADDITIONAL_OPTIONS).map((it) => getEditAdditionalOption(it, items)).join(``);
+export const getEditAdditionalOptions = (type, items) => globalState.offers.find((offer) => offer.type === type).offers.map((it) => getEditAdditionalOption(it, new Set([...items.map((item) => item.title)]))).join(``);
