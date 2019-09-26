@@ -57,8 +57,7 @@ export default class Api {
     return fetch(`${this._host}/${path}`, {method, body, headers})
       .then(checkStatus)
       .catch((err) => {
-        console.error(`fetch error: ${err}`);
-        throw err;
+        throw new Error(`fetch error: ${err}`);
       });
   }
 

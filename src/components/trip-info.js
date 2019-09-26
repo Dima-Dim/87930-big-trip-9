@@ -74,15 +74,21 @@ const makeTripInfoStartEndTripDate = (firstDayEvents, lastDayEvents) => {
 };
 
 export default class TripInfo extends AbstractComponent {
-  constructor(events) {
+  constructor(days) {
     super();
-    this._events = Array.from(events);
+    this._days = Array.from(days);
   }
 
   getTemplate() {
     return `<div class="trip-info__main">
-              <h1 class="trip-info__title">${this._events.length ? makeTripInfoTitle(this._events) : ``}</h1>
-              <p class="trip-info__dates">${this._events.length ? makeTripInfoStartEndTripDate(this._events[0][1], this._events[this._events.length - 1][1]) : ``}</p>
+              <h1 class="trip-info__title">${this._days.length ? makeTripInfoTitle(this._days) : ``}</h1>
+              <p class="trip-info__dates">${this._days.length ? makeTripInfoStartEndTripDate(this._days[0][1], this._days[this._days.length - 1][1]) : ``}</p>
             </div>`;
+  }
+
+  update(days) {
+    this._days = Array.from(days);
+    this.getElement().querySelector(`.trip-info__title`).textContent = makeTripInfoTitle(this._days);
+    this.getElement().querySelector(`.trip-info__dates`).textContent = makeTripInfoStartEndTripDate(this._days[0][1], this._days[this._days.length - 1][1]);
   }
 }

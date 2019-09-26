@@ -91,8 +91,7 @@ export class Index {
   }
 
   _changeEventOrder(type = DEFAULT_SORT_EVENTS) {
-    this._events = globalState.events;
-    this._days = this._getDays(this._events);
+    Index._calculationTotalCost(this._days);
     this._daysContainer.getElement().textContent = ``;
     this._sortedEvents = [];
 
@@ -132,31 +131,39 @@ export class Index {
     }
   }
 
-  _onDataChange(currentData, newData) {
+  _onDataChange(currentData, newData, cb) {
     if (!newData) {
       globalState.api.deleteEvent(currentData.id)
-        .then(() => globalState.api.getEvents())
-        .then((events) => globalState.addEvents(events))
-        .then(() => this._changeEventOrder());
+        .then(() => globalState.api.getEvents()
+          .then((events) => globalState.addEvents(events))
+          .then(() => (this._events = globalState.events))
+          .then(() => (this._days = this._getDays(this._events)))
+          .then(() => this._tripInfo.update(this._days))
+          .then(() => cb.success(`remove`))
+          .then(() => this._changeEventOrder()))
+        .catch((err) => cb.error(err));
     } else if (!currentData) {
       globalState.api.createEvent(newData)
-        .then(() => globalState.api.getEvents())
-        .then((events) => globalState.addEvents(events))
-        .then(() => this._changeEventOrder());
+        .then(() => globalState.api.getEvents()
+          .then((events) => globalState.addEvents(events))
+          .then(() => (this._events = globalState.events))
+          .then(() => (this._days = this._getDays(this._events)))
+          .then(() => this._tripInfo.update(this._days))
+          .then(() => cb.success(`remove`))
+          .then(() => this._changeEventOrder()))
+        .catch((err) => cb.error(err));
     } else {
       newData.id = currentData.id;
       globalState.api.updateEvent(newData)
-        .then(() => globalState.api.getEvents())
-        .then((events) => globalState.addEvents(events))
-        .then(() => this._changeEventOrder());
+        .then(() => globalState.api.getEvents()
+          .then((events) => globalState.addEvents(events))
+          .then(() => (this._events = globalState.events))
+          .then(() => (this._days = this._getDays(this._events)))
+          .then(() => this._tripInfo.update(this._days))
+          .then(() => cb.success(`remove`))
+          .then(() => this._changeEventOrder()))
+        .catch((err) => cb.error(err));
     }
-
-    this._events = globalState.events;
-
-    this._days = this._getDays(this._events);
-    // this._changeEventOrder();
-    this._state.editing = null;
-    this._state.adding = null;
   }
 
   static _calculationTotalCost(costItems) {

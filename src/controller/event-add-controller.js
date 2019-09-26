@@ -4,8 +4,8 @@ import {ALL_EVENT_TYPES, ClassesElements, EVENT_DESTINATION, KeyCode} from "../c
 import EventAdd from "../components/event-add";
 
 export default class EventAddController {
-  constructor(onDataChange, globalState) {
-    this._globalState = globalState;
+  constructor(onDataChange, indexState) {
+    this._indexState = indexState;
     this._eventAdd = new EventAdd();
     this._onDataChange = onDataChange;
     this._flatpickr = {
@@ -16,7 +16,7 @@ export default class EventAddController {
 
   init(container) {
     AbstractComponent.renderElement(container, this._eventAdd.getElement(), `insertBefore`);
-    this._globalState.adding = this._eventAdd.removeElement.bind(this._eventAdd);
+    this._indexState.adding = this._eventAdd.removeElement.bind(this._eventAdd);
     const inputs = this._eventAdd.getElement().querySelectorAll(`input, textarea`);
     const eventAddInputList = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT_LIST}`);
     const eventAddTypeIcon = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_ICON}`);
@@ -29,6 +29,16 @@ export default class EventAddController {
     const eventAddEndTimeInput = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-end-time"]`);
     const eventAddTypeInput = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT}`);
     const eventAddCancel = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_DELETE_BTN}`);
+    const eventEditSaveBtn = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_SAVE_BTN}`);
+
+    const activeFieldsForm = [
+      eventAddDestinationInput,
+      eventAddStartTimeInput,
+      eventAddEndTimeInput,
+      eventAddTypeInput,
+      eventAddCancel,
+      eventEditSaveBtn
+    ];
 
     if (this._flatpickr.active && this._flatpickr.plugins) {
       useFlatpickr(eventAddStartTimeInput, eventAddEndTimeInput, Array.from(this._flatpickr.plugins));
@@ -48,10 +58,10 @@ export default class EventAddController {
       }
       this._eventAdd.getElement().removeEventListener(`submit`, onSubmitForm);
       document.removeEventListener(`keydown`, onEscDownRollup);
-      if (this._globalState.adding) {
-        this._globalState.adding();
+      if (this._indexState.adding) {
+        this._indexState.adding();
       }
-      this._globalState.adding = false;
+      this._indexState.adding = false;
     };
 
     const openingRollupHandler = () => {
@@ -118,8 +128,43 @@ export default class EventAddController {
         type: eventAddTypeInput.querySelector(`input:checked`).value,
       };
 
+      eventEditSaveBtn.textContent = `Saving...`;
+      blockForm();
+      this._onDataChange(null, entry, {success: loadSuccess, error: loadError});
+    };
+
+    const blockForm = (action) => {
+      if (action === `remove`) {
+        activeFieldsForm.forEach((it) => {
+          it.disabled = false;
+        });
+      } else {
+        activeFieldsForm.forEach((it) => {
+          it.disabled = true;
+        });
+      }
+    };
+
+    const loadSuccess = () => {
+      this._eventAdd.alarmStyle(`remove`);
+      blockForm();
       closingRollupHandler();
-      this._onDataChange(null, entry);
+
+      return true;
+    };
+
+    const loadError = (err) => {
+      if (err) {
+        throw new Error(err);
+      }
+
+      eventEditSaveBtn.classList.add(`shake`);
+      this._eventAdd.alarmStyle(`on`);
+      this._eventAdd.shake();
+      eventEditSaveBtn.textContent = `Save`;
+      blockForm(`unblock`);
+
+      return true;
     };
 
     openingRollupHandler();
