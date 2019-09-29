@@ -1,5 +1,4 @@
 import {ACTIVITY_EVENT_TYPES, ElementClass} from "../components/config";
-import {updateChart} from "../components/utils";
 import AbstractComponent from "../components/abstract-component";
 import Statistics from "../components/statistics";
 import Chart from 'chart.js';
@@ -84,48 +83,48 @@ export default class StatisticsController {
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
 
     if (this._charts.has(`money`)) {
-      updateChart(this._charts.get(`money`), sourceDataForChart[0], sourceDataForChart[1]);
-    } else {
-      const moneyChart = new Chart(ctxTags, {
-        type: `horizontalBar`,
-        plugins: [ChartDataLabels],
-        data: {
-          labels: sourceDataForChart[0],
-          datasets: [{
-            data: sourceDataForChart[1],
-            backgroundColor: [
-              `rgba(255, 99, 132, 0.3)`,
-              `rgba(54, 162, 235, 0.3)`,
-              `rgba(255, 206, 86, 0.3)`,
-              `rgba(75, 192, 192, 0.3)`,
-              `rgba(153, 102, 255, 0.3)`,
-              `rgba(255, 159, 64, 0.3)`,
-            ],
-            borderColor: [
-              `rgba(255, 99, 132, 1)`,
-              `rgba(54, 162, 235, 1)`,
-              `rgba(255, 206, 86, 1)`,
-              `rgba(75, 192, 192, 1)`,
-              `rgba(153, 102, 255, 1)`,
-              `rgba(255, 159, 64, 1)`,
-            ],
-            borderWidth: 1
-          }],
-        },
-        options: {
-          plugins: {
-            datalabels: {
-              anchor: `end`,
-              align: `end`,
-              offset: -50,
-              formatter: (value) => `€ ${value}`
-            },
-          }
-        }
-      });
-
-      this._charts.set(`money`, moneyChart);
+      this._charts.get(`money`).destroy();
     }
+
+    const moneyChart = new Chart(ctxTags, {
+      type: `horizontalBar`,
+      plugins: [ChartDataLabels],
+      data: {
+        labels: sourceDataForChart[0],
+        datasets: [{
+          data: sourceDataForChart[1],
+          backgroundColor: [
+            `rgba(255, 99, 132, 0.3)`,
+            `rgba(54, 162, 235, 0.3)`,
+            `rgba(255, 206, 86, 0.3)`,
+            `rgba(75, 192, 192, 0.3)`,
+            `rgba(153, 102, 255, 0.3)`,
+            `rgba(255, 159, 64, 0.3)`,
+          ],
+          borderColor: [
+            `rgba(255, 99, 132, 1)`,
+            `rgba(54, 162, 235, 1)`,
+            `rgba(255, 206, 86, 1)`,
+            `rgba(75, 192, 192, 1)`,
+            `rgba(153, 102, 255, 1)`,
+            `rgba(255, 159, 64, 1)`,
+          ],
+          borderWidth: 1
+        }],
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            anchor: `end`,
+            align: `end`,
+            offset: -50,
+            formatter: (value) => `€ ${value}`
+          },
+        }
+      }
+    });
+
+    this._charts.set(`money`, moneyChart);
 
     return this._charts.money;
   }
@@ -137,48 +136,48 @@ export default class StatisticsController {
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
 
     if (this._charts.has(`transport`)) {
-      updateChart(this._charts.get(`transport`), sourceDataForChart[0], sourceDataForChart[1]);
-    } else {
-      const transportChart = new Chart(ctxTags, {
-        type: `horizontalBar`,
-        plugins: [ChartDataLabels],
-        data: {
-          labels: sourceDataForChart[0],
-          datasets: [{
-            data: sourceDataForChart[1],
-            backgroundColor: [
-              `rgba(255, 99, 132, 0.3)`,
-              `rgba(54, 162, 235, 0.3)`,
-              `rgba(255, 206, 86, 0.3)`,
-              `rgba(75, 192, 192, 0.3)`,
-              `rgba(153, 102, 255, 0.3)`,
-              `rgba(255, 159, 64, 0.3)`,
-            ],
-            borderColor: [
-              `rgba(255, 99, 132, 1)`,
-              `rgba(54, 162, 235, 1)`,
-              `rgba(255, 206, 86, 1)`,
-              `rgba(75, 192, 192, 1)`,
-              `rgba(153, 102, 255, 1)`,
-              `rgba(255, 159, 64, 1)`,
-            ],
-            borderWidth: 1
-          }],
-        },
-        options: {
-          plugins: {
-            datalabels: {
-              anchor: `end`,
-              align: `end`,
-              offset: -50,
-              formatter: (value) => `${value}`
-            },
-          }
-        }
-      });
-
-      this._charts.set(`transport`, transportChart);
+      this._charts.get(`transport`).destroy();
     }
+
+    const transportChart = new Chart(ctxTags, {
+      type: `horizontalBar`,
+      plugins: [ChartDataLabels],
+      data: {
+        labels: sourceDataForChart[0],
+        datasets: [{
+          data: sourceDataForChart[1],
+          backgroundColor: [
+            `rgba(255, 99, 132, 0.3)`,
+            `rgba(54, 162, 235, 0.3)`,
+            `rgba(255, 206, 86, 0.3)`,
+            `rgba(75, 192, 192, 0.3)`,
+            `rgba(153, 102, 255, 0.3)`,
+            `rgba(255, 159, 64, 0.3)`,
+          ],
+          borderColor: [
+            `rgba(255, 99, 132, 1)`,
+            `rgba(54, 162, 235, 1)`,
+            `rgba(255, 206, 86, 1)`,
+            `rgba(75, 192, 192, 1)`,
+            `rgba(153, 102, 255, 1)`,
+            `rgba(255, 159, 64, 1)`,
+          ],
+          borderWidth: 1
+        }],
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            anchor: `end`,
+            align: `end`,
+            offset: -50,
+            formatter: (value) => `${value}`
+          },
+        }
+      }
+    });
+
+    this._charts.set(`transport`, transportChart);
 
     return this._charts.transport;
   }
@@ -190,48 +189,48 @@ export default class StatisticsController {
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
 
     if (this._charts.has(`time`)) {
-      updateChart(this._charts.get(`time`), sourceDataForChart[0], sourceDataForChart[1]);
-    } else {
-      const timeChart = new Chart(ctxTags, {
-        type: `horizontalBar`,
-        plugins: [ChartDataLabels],
-        data: {
-          labels: sourceDataForChart[0],
-          datasets: [{
-            data: sourceDataForChart[1],
-            backgroundColor: [
-              `rgba(255, 99, 132, 0.3)`,
-              `rgba(54, 162, 235, 0.3)`,
-              `rgba(255, 206, 86, 0.3)`,
-              `rgba(75, 192, 192, 0.3)`,
-              `rgba(153, 102, 255, 0.3)`,
-              `rgba(255, 159, 64, 0.3)`,
-            ],
-            borderColor: [
-              `rgba(255, 99, 132, 1)`,
-              `rgba(54, 162, 235, 1)`,
-              `rgba(255, 206, 86, 1)`,
-              `rgba(75, 192, 192, 1)`,
-              `rgba(153, 102, 255, 1)`,
-              `rgba(255, 159, 64, 1)`,
-            ],
-            borderWidth: 1
-          }],
-        },
-        options: {
-          plugins: {
-            datalabels: {
-              anchor: `end`,
-              align: `end`,
-              offset: -50,
-              formatter: (value) => `${value}H`
-            },
-          }
-        }
-      });
-
-      this._charts.set(`time`, timeChart);
+      this._charts.get(`time`).destroy();
     }
+
+    const timeChart = new Chart(ctxTags, {
+      type: `horizontalBar`,
+      plugins: [ChartDataLabels],
+      data: {
+        labels: sourceDataForChart[0],
+        datasets: [{
+          data: sourceDataForChart[1],
+          backgroundColor: [
+            `rgba(255, 99, 132, 0.3)`,
+            `rgba(54, 162, 235, 0.3)`,
+            `rgba(255, 206, 86, 0.3)`,
+            `rgba(75, 192, 192, 0.3)`,
+            `rgba(153, 102, 255, 0.3)`,
+            `rgba(255, 159, 64, 0.3)`,
+          ],
+          borderColor: [
+            `rgba(255, 99, 132, 1)`,
+            `rgba(54, 162, 235, 1)`,
+            `rgba(255, 206, 86, 1)`,
+            `rgba(75, 192, 192, 1)`,
+            `rgba(153, 102, 255, 1)`,
+            `rgba(255, 159, 64, 1)`,
+          ],
+          borderWidth: 1
+        }],
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            anchor: `end`,
+            align: `end`,
+            offset: -50,
+            formatter: (value) => `${value}H`
+          },
+        }
+      }
+    });
+
+    this._charts.set(`time`, timeChart);
 
     return this._charts.time;
   }
