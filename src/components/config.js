@@ -81,17 +81,17 @@ export const ACTIVITY_EVENT_TYPES = new Map([
 export const TRANSFER_EVENT_TYPES = new Map([
   [`check-in`, {
     NAME: `Check`,
-    TITLE: `Check into`,
+    TITLE: `Check in`,
     ICON_URL: `img/icons/check-in.png`
   }],
   [`sightseeing`, {
     NAME: `Sightseeing`,
-    TITLE: `Check into`,
+    TITLE: `Check in`,
     ICON_URL: `img/icons/sightseeing.png`
   }],
   [`restaurant`, {
     NAME: `Restaurant`,
-    TITLE: `Check into`,
+    TITLE: `Check in`,
     ICON_URL: `img/icons/restaurant.png`
   }],
 ]);
