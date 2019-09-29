@@ -26,6 +26,7 @@ export default class EventController {
     const eventRollupOpenBtn = event.getElement().querySelector(`.${ClassesElements.EVENT_ROLLUP_BTN}`);
     const eventEditRollupCloseBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_ROLLUP_BTN}`);
     const eventEditInputList = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT_LIST}`);
+    const eventEditTypeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT}`);
     const eventEditTypeIcon = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_ICON}`);
     const eventEditTypeOutput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_OUTPUT}`);
     const eventEditDestinationInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_INPUT}`);
@@ -35,8 +36,18 @@ export default class EventController {
     const eventEditStartTimeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-start-time"]`);
     const eventEditEndTimeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-end-time"]`);
     const eventEditFavoriteInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_FAVORITE_INPUT}`);
-    const eventEditTypeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT}`);
     const eventEditDeleteBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DELETE_BTN}`);
+    const eventEditSaveBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_SAVE_BTN}`);
+
+    const activeFieldsForm = [
+      eventEditDestinationInput,
+      eventEditStartTimeInput,
+      eventEditEndTimeInput,
+      eventEditFavoriteInput,
+      eventEditTypeInput,
+      eventEditDeleteBtn,
+      eventEditSaveBtn
+    ];
 
     if (this._flatpickr.active && this._flatpickr.plugins) {
       useFlatpickr(eventEditStartTimeInput, eventEditEndTimeInput, Array.from(this._flatpickr.plugins));
@@ -142,12 +153,49 @@ export default class EventController {
         type: eventEditTypeInput.querySelector(`input:checked`).value,
       };
 
-      closingRollupHandler();
-      this._onDataChange(this._event, entry);
+      eventEditSaveBtn.textContent = `Saving...`;
+      blockForm();
+      this._onDataChange(this._event, entry, {success: loadSuccess, error: loadError});
     };
 
     const onClickDeleteBtn = () => {
-      this._onDataChange(this._event, null);
+      eventEditDeleteBtn.textContent = `Deleting...`;
+      blockForm();
+      this._onDataChange(this._event, null, {success: loadSuccess, error: loadError});
+    };
+
+    const blockForm = (action) => {
+      if (action === `remove`) {
+        activeFieldsForm.forEach((it) => {
+          it.disabled = false;
+        });
+      } else {
+        activeFieldsForm.forEach((it) => {
+          it.disabled = true;
+        });
+      }
+    };
+
+    const loadSuccess = () => {
+      eventEdit.alarmStyle(`remove`);
+      blockForm();
+      closingRollupHandler();
+
+      return true;
+    };
+
+    const loadError = (err) => {
+      if (err) {
+        throw new Error(err);
+      }
+
+      eventEditSaveBtn.classList.add(`shake`);
+      eventEdit.alarmStyle(`on`);
+      eventEdit.shake();
+      eventEditSaveBtn.textContent = `Save`;
+      blockForm(`unblock`);
+
+      return true;
     };
 
     eventRollupOpenBtn.addEventListener(`click`, onClickRollupBtn);

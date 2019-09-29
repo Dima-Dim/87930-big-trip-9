@@ -35,6 +35,7 @@ export default class StatisticsController {
     };
     this._parseAllData(data);
     this._makeMoneyChart();
+    this._makeTransportChart();
     this._makeTimeChart();
     this._statisics.show();
   }
@@ -64,7 +65,7 @@ export default class StatisticsController {
     });
   }
 
-  _getMoneyChartData(data) {
+  _getChartData(data) {
     const labelsForChart = [];
     const dataForChart = [];
 
@@ -77,7 +78,7 @@ export default class StatisticsController {
   }
 
   _makeMoneyChart() {
-    const sourceDataForChart = this._getMoneyChartData(this._parsedData.money);
+    const sourceDataForChart = this._getChartData(this._parsedData.money);
     const canvas = this._statisics.getElement().querySelector(`.${ClassesElements.STATISTICS_MONEY}`);
     const ctxTags = canvas.getContext(`2d`);
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
@@ -129,8 +130,61 @@ export default class StatisticsController {
     return this._charts.money;
   }
 
+  _makeTransportChart() {
+    const sourceDataForChart = this._getChartData(this._parsedData.transport);
+    const canvas = this._statisics.getElement().querySelector(`.${ClassesElements.STATISTICS_TRANSPORT}`);
+    const ctxTags = canvas.getContext(`2d`);
+    ctxTags.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (this._charts.has(`transport`)) {
+      updateChart(this._charts.get(`transport`), sourceDataForChart[0], sourceDataForChart[1]);
+    } else {
+      const transportChart = new Chart(ctxTags, {
+        type: `horizontalBar`,
+        plugins: [ChartDataLabels],
+        data: {
+          labels: sourceDataForChart[0],
+          datasets: [{
+            data: sourceDataForChart[1],
+            backgroundColor: [
+              `rgba(255, 99, 132, 0.3)`,
+              `rgba(54, 162, 235, 0.3)`,
+              `rgba(255, 206, 86, 0.3)`,
+              `rgba(75, 192, 192, 0.3)`,
+              `rgba(153, 102, 255, 0.3)`,
+              `rgba(255, 159, 64, 0.3)`,
+            ],
+            borderColor: [
+              `rgba(255, 99, 132, 1)`,
+              `rgba(54, 162, 235, 1)`,
+              `rgba(255, 206, 86, 1)`,
+              `rgba(75, 192, 192, 1)`,
+              `rgba(153, 102, 255, 1)`,
+              `rgba(255, 159, 64, 1)`,
+            ],
+            borderWidth: 1
+          }],
+        },
+        options: {
+          plugins: {
+            datalabels: {
+              anchor: `end`,
+              align: `end`,
+              offset: -50,
+              formatter: (value) => `${value}`
+            },
+          }
+        }
+      });
+
+      this._charts.set(`transport`, transportChart);
+    }
+
+    return this._charts.transport;
+  }
+
   _makeTimeChart() {
-    const sourceDataForChart = this._getMoneyChartData(this._parsedData.time);
+    const sourceDataForChart = this._getChartData(this._parsedData.time);
     const canvas = this._statisics.getElement().querySelector(`.${ClassesElements.STATISTICS_TIME}`);
     const ctxTags = canvas.getContext(`2d`);
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);

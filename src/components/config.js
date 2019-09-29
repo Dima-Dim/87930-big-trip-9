@@ -209,6 +209,7 @@ export const ClassesElements = {
   EVENT_TYPE_INPUT: `event__type-list`,
   EVENT_ROLLUP_BTN: `event__rollup-btn`,
   EVENT_DELETE_BTN: `event__reset-btn`,
+  EVENT_SAVE_BTN: `event__save-btn`,
   STATISTICS_MONEY: `statistics__chart--money`,
   STATISTICS_TRANSPORT: `statistics__chart--transport`,
   STATISTICS_TIME: `statistics__chart--time`,
