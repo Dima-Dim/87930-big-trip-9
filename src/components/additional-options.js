@@ -1,3 +1,4 @@
+import {NumberAdditionalOptionsInList} from "./config";
 import {globalState} from "../main";
 
 /**
@@ -39,7 +40,7 @@ const getEditAdditionalOption = ({title, price}, items) => `
  *
  * @return {string} HTML-код
  */
-export const getAdditionalOptions = (items) => items.filter((it) => it.accepted).map((it) => getAdditionalOption(it)).join(``);
+export const getAdditionalOptions = (items) => items.filter((it) => !(it.accepted === false)).slice(0, NumberAdditionalOptionsInList).map((it) => getAdditionalOption(it)).join(``);
 
 /**
  * Функция, возвращающая разметку блока дополнительных опции для редактирования события

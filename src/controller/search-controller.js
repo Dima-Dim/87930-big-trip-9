@@ -1,5 +1,5 @@
 import Filters from "../components/filter";
-import {FILTER_ID_PREFIX} from "../components/config";
+import {IdPrefix} from "../components/config";
 
 export default class SearchController {
   constructor(filtersData, onChangeView) {
@@ -11,7 +11,7 @@ export default class SearchController {
 
   init() {
     const onChangeFilter = () => {
-      this._onChangeView(null, this._filter.getElement().querySelector(`input:checked`).id.slice(FILTER_ID_PREFIX.length));
+      this._onChangeView(null, this._filter.getElement().querySelector(`input:checked`).id.slice(IdPrefix.FILTER.length));
     };
 
     this._filter.getElement().addEventListener(`change`, onChangeFilter);

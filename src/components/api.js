@@ -1,5 +1,5 @@
-import {ApiData, HTTPHeaders, HTTPMethod} from "./config";
-import {checkStatus, fromJSON} from "./utils";
+import {ApiData, HttpHeader, HttpMethod} from "./config";
+import {checkStatus} from "./utils";
 import EventsAdapter from "./events-adapter";
 
 export default class Api {
@@ -9,49 +9,52 @@ export default class Api {
   }
 
   getEvents() {
-    return this._load({path: ApiData.POINTS})
-      .then(fromJSON)
-      .then(EventsAdapter.parseEvents);
+    return this._load({path: ApiData.POINTS});
   }
 
-  getDestination() {
-    return this._load({path: ApiData.DESTINATIONS})
-      .then(fromJSON);
+  getDestinations() {
+    return this._load({path: ApiData.DESTINATIONS});
   }
 
   getOffers() {
-    return this._load({path: ApiData.OFFERS})
-      .then(fromJSON);
+    return this._load({path: ApiData.OFFERS});
   }
 
   createEvent(event) {
     return this._load({
       path: ApiData.POINTS,
-      method: HTTPMethod.POST,
+      method: HttpMethod.POST,
       body: JSON.stringify(EventsAdapter.toSource(event)),
-      headers: new Headers(HTTPHeaders.JSON),
-    })
-      .then(fromJSON)
-      .then(EventsAdapter.parseEvent);
+      headers: new Headers(HttpHeader.JSON),
+    });
   }
 
   updateEvent(event) {
     return this._load({
       path: `${ApiData.POINTS}/${event.id}`,
-      method: HTTPMethod.PUT,
+      method: HttpMethod.PUT,
       body: JSON.stringify(EventsAdapter.toSource(event)),
-      headers: new Headers(HTTPHeaders.JSON)
+      headers: new Headers(HttpHeader.JSON)
     });
   }
 
-  deleteEvent(id) {
+  removeEvent(id) {
     return this._load({
       path: `${ApiData.POINTS}/${id}`,
-      method: HTTPMethod.DELETE,
+      method: HttpMethod.DELETE,
     });
   }
 
-  _load({path, method = HTTPMethod.GET, body = null, headers = new Headers()}) {
+  syncEvents(events) {
+    return this._load({
+      path: `${ApiData.POINTS}/${ApiData.SYNC}`,
+      method: HttpMethod.POST,
+      body: JSON.stringify(events),
+      headers: new Headers(HttpHeader.JSON)
+    });
+  }
+
+  _load({path, method = HttpMethod.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._host}/${path}`, {method, body, headers})
@@ -60,5 +63,4 @@ export default class Api {
         throw new Error(`fetch error: ${err}`);
       });
   }
-
 }

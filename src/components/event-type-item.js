@@ -1,3 +1,5 @@
+import {Default} from "./config";
+
 /**
  * Функция, возвращающая разметку типа события
  *
@@ -22,4 +24,4 @@ export const getMarkupEventTypeItem = ([idEvent, {NAME}], activeType) => `
  *
  * @return {string} HTML-код
  */
-export const getMarkupEventTypeItems = (items, activeType) => Array.from(items).map((it) => getMarkupEventTypeItem(it, activeType)).join(``);
+export const getMarkupEventTypeItems = (items, activeType = Default.ACTIVE_EVENT_TYPE) => Array.from(items).map((it) => getMarkupEventTypeItem(it, activeType)).join(``);

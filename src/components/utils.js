@@ -1,4 +1,4 @@
-import {FLATPICKR_CONFIG, LOCALES, TIME_FORMAT} from "./config";
+import {FLATPICKR_CONFIG, KeyCode, LOCALES, TimeFormat} from "./config";
 import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 import * as RangePlugin from "flatpickr/dist/plugins/rangePlugin";
 import flatpickr from "flatpickr";
@@ -85,7 +85,7 @@ export const getYearFromTimeStamp = (timestamp, number = 4) => dateObgFromTimest
  *
  * @return {string}
  */
-export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(LOCALES, TIME_FORMAT);
+export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(LOCALES, TimeFormat);
 
 /**
  * Функция, преобразующая timestamp в datetime для HTML
@@ -153,67 +153,6 @@ export const getDurationFromTimeStamps = (startTimestamp, endTimestamp) => {
   }
 
   return newString;
-};
-
-/**
- * Функция для получения случайного целого числа в заданном промежутке
- *
- * @param {number} min Минимальное значение промежутка
- * @param {number} max Максимальное значение промежутка
- *
- * @return {number} Случайное целое числа в заданном промежутке
- */
-export const getRandomIntegerBetween = (min, max) => min + Math.floor(Math.random() * (max + 1 - min));
-
-/**
- * Функция для получения нового массива случайных элемента из переданного массива
- *
- * @param {Array} arr Массив, из которого нужно поучить случайные элементы
- * @param {number} amount Количество случайных элементов, которое нужно получить.
- *
- * @return {Array}
- */
-export const getRandomElementsFromArray = (arr, amount = 1) => {
-  const newArr = [];
-  for (let i = 0; i < amount; i++) {
-    newArr.push(arr[getRandomIntegerBetween(0, arr.length)]);
-  }
-
-  return newArr;
-};
-
-/**
- * Функция для получения url-ов случайных фото
- *
- * @return {string} URL
- */
-export const getEventPhoto = () => `http://picsum.photos/248/152?r=${Math.random()}`;
-
-export const sortOrder = {
-  /**
-   * Функция для сортировки по возрастанию массива объектов на основании определенного свойства этих объектов
-   *
-   * @param {Object} a Левый элемент массива
-   * @param {Object} b Правый элемент массива
-   * @param {string} arg Свойство элемента массива, по которому необходимо выполнить сортировку
-   *
-   * @return {number}
-   */
-  asc(a, b, arg) {
-    return a[arg] - b[arg];
-  },
-  /**
-   * Функция для сортировки по убыванию массива объектов на основании определенного свойства этих объектов
-   *
-   * @param {Object} a Левый элемент массива
-   * @param {Object} b Правый элемент массива
-   * @param {string} arg Свойство элемента массива, по которому необходимо выполнить сортировку
-   *
-   * @return {number}
-   */
-  dec(a, b, arg) {
-    return b[arg] - a[arg];
-  },
 };
 
 export const sortOrderEvents = {
@@ -284,6 +223,36 @@ export const checkStatus = (response) => {
   }
 };
 
-export const fromJSON = (response) => {
+export const enteredIsInteger = (evt) => {
+  if ((evt.keyCode >= 48 && evt.keyCode <= 57) ||
+    (evt.keyCode >= 96 && evt.keyCode <= 105) ||
+    evt.keyCode === KeyCode.BACKSPACE ||
+    evt.keyCode === KeyCode.HOME ||
+    evt.keyCode === KeyCode.END ||
+    evt.keyCode === KeyCode.DELETE ||
+    evt.keyCode === KeyCode.LEFT_ARROW ||
+    evt.keyCode === KeyCode.RIGHT_ARROW ||
+    (evt.keyCode === KeyCode.A && (evt.ctrlKey || evt.metaKey))) {
+    return true;
+  }
+
+  return false;
+};
+
+export const responseFromJSON = (response) => {
   return response.json();
+};
+
+export const generateId = (length = 8) => {
+  const charset = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`;
+  let retVal = ``;
+
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return retVal;
+};
+
+export const objectToArray = (object) => {
+  return Object.keys(object).map((id) => object[id]);
 };

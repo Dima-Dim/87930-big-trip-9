@@ -48,5 +48,19 @@
       </div>
     </main>
     <script src="bundle.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        // Регистрация сервис-воркера в браузере
+        navigator.serviceWorker.register('./sw.js')
+            .then(function (reg) {
+              // Регистрация сработала
+              console.log('Registration succeeded. Scope is ' + reg.scope);
+            })
+            .catch(function (error) {
+              // Регистрация прошла неудачно
+              console.log('Registration failed with ' + error);
+            });
+      }
+    </script>
   </body>
 </html>
