@@ -1,4 +1,4 @@
-import {ACTIVITY_EVENT_TYPES, ElementClass} from "../components/config";
+import {ACTIVITY_EVENT_TYPES, ElementClass, millisecondInDay} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import Statistics from "../components/statistics";
 import Chart from 'chart.js';
@@ -43,7 +43,7 @@ export default class StatisticsController {
     if (!Array.isArray(eventValue)) {
       value = eventValue;
     } else {
-      value = eventValue[1] - eventValue[0];
+      value = (eventValue[1] - eventValue[0]) / millisecondInDay;
     }
 
     if (eventKey in this._parsedData[parsedDataKey]) {
@@ -112,6 +112,13 @@ export default class StatisticsController {
         }],
       },
       options: {
+        title: {
+          display: true,
+          text: `Money`
+        },
+        legend: {
+          display: false,
+        },
         plugins: {
           datalabels: {
             anchor: `end`,
@@ -165,6 +172,13 @@ export default class StatisticsController {
         }],
       },
       options: {
+        title: {
+          display: true,
+          text: `Transport`
+        },
+        legend: {
+          display: false,
+        },
         plugins: {
           datalabels: {
             anchor: `end`,
@@ -218,12 +232,19 @@ export default class StatisticsController {
         }],
       },
       options: {
+        title: {
+          display: true,
+          text: `Time`
+        },
+        legend: {
+          display: false,
+        },
         plugins: {
           datalabels: {
             anchor: `end`,
             align: `end`,
             offset: -50,
-            formatter: (value) => `${value}H`
+            formatter: (value) => `${value} D`
           },
         }
       }

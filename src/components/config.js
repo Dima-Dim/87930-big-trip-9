@@ -227,3 +227,5 @@ export const getEventDefaultData = () => ({
   additionalOptions: globalState.offers[0].offers,
   isFavorite: false,
 });
+
+export const millisecondInDay = 86400000;
