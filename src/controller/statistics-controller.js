@@ -4,7 +4,6 @@ import Statistics from "../components/statistics";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-
 export default class StatisticsController {
   constructor(container, data) {
     this._statisics = new Statistics();
