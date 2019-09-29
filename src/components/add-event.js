@@ -1,6 +1,7 @@
-import {ACTIVITY_EVENT_TYPES, TRANSFER_EVENT_TYPES, ALL_EVENT_TYPES, DEFAULT_CHECKED_TYPE, EVENT_DESTINATION} from "./config";
+import {ACTIVITY_EVENT_TYPES, TRANSFER_EVENT_TYPES, ALL_EVENT_TYPES, Default} from "./config";
 import {getDateForEvenEditFromTimeStamp} from "./utils";
 import {getMarkupEventTypeItems} from "./event-type-item";
+import {globalState} from "../main";
 
 /**
  * Функция, возвращающая разметку карточки добавления нового события
@@ -36,11 +37,11 @@ export const getMarkupAddEvent = () => `
 
     <div class="event__field-group  event__field-group--destination">
       <label class="event__label  event__type-output" for="event-destination-1">
-        ${ALL_EVENT_TYPES.get(DEFAULT_CHECKED_TYPE)[`TITLE`]}
+        ${ALL_EVENT_TYPES.get(Default.CHECKED_TYPE)[`TITLE`]}
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
       <datalist id="destination-list-1">
-        ${Array.from(EVENT_DESTINATION).map((it) => `<option value="${it[0]}"></option>`).join(``)}
+        ${globalState.destinations.map((it) => `<option value="${it[0]}"></option>`).join(``)}
       </datalist>
     </div>
 

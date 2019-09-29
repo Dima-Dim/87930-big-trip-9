@@ -67,7 +67,7 @@ const makeTripInfoStartEndTripDate = (firstDayEvents, lastDayEvents) => {
   if (startMonth === endMonth) {
     newStr += `${startMonth.substr(0, MONTH_NAME_LENGTH)} ${startDay} — ${endDay}`;
   } else {
-    newStr += `${startDay}${startMonth.substr(0, MONTH_NAME_LENGTH)} — ${endDay}${endMonth.substr(0, MONTH_NAME_LENGTH)}`;
+    newStr += `${startDay} ${startMonth.substr(0, MONTH_NAME_LENGTH)} — ${endDay} ${endMonth.substr(0, MONTH_NAME_LENGTH)}`;
   }
 
   return newStr;

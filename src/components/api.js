@@ -1,4 +1,4 @@
-import {ApiData, HTTPHeaders, HTTPMethod} from "./config";
+import {ApiData, HttpHeader, HttpMethod} from "./config";
 import {checkStatus, fromJSON} from "./utils";
 import EventsAdapter from "./events-adapter";
 
@@ -27,9 +27,9 @@ export default class Api {
   createEvent(event) {
     return this._load({
       path: ApiData.POINTS,
-      method: HTTPMethod.POST,
+      method: HttpMethod.POST,
       body: JSON.stringify(EventsAdapter.toSource(event)),
-      headers: new Headers(HTTPHeaders.JSON),
+      headers: new Headers(HttpHeader.JSON),
     })
       .then(fromJSON)
       .then(EventsAdapter.parseEvent);
@@ -38,20 +38,20 @@ export default class Api {
   updateEvent(event) {
     return this._load({
       path: `${ApiData.POINTS}/${event.id}`,
-      method: HTTPMethod.PUT,
+      method: HttpMethod.PUT,
       body: JSON.stringify(EventsAdapter.toSource(event)),
-      headers: new Headers(HTTPHeaders.JSON)
+      headers: new Headers(HttpHeader.JSON)
     });
   }
 
   deleteEvent(id) {
     return this._load({
       path: `${ApiData.POINTS}/${id}`,
-      method: HTTPMethod.DELETE,
+      method: HttpMethod.DELETE,
     });
   }
 
-  _load({path, method = HTTPMethod.GET, body = null, headers = new Headers()}) {
+  _load({path, method = HttpMethod.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._host}/${path}`, {method, body, headers})

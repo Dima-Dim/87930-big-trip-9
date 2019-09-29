@@ -1,4 +1,4 @@
-import {ACTIVITY_EVENT_TYPES, ClassesElements} from "../components/config";
+import {ACTIVITY_EVENT_TYPES, ElementClass} from "../components/config";
 import {updateChart} from "../components/utils";
 import AbstractComponent from "../components/abstract-component";
 import Statistics from "../components/statistics";
@@ -79,7 +79,7 @@ export default class StatisticsController {
 
   _makeMoneyChart() {
     const sourceDataForChart = this._getChartData(this._parsedData.money);
-    const canvas = this._statisics.getElement().querySelector(`.${ClassesElements.STATISTICS_MONEY}`);
+    const canvas = this._statisics.getElement().querySelector(`.${ElementClass.STATISTICS_MONEY}`);
     const ctxTags = canvas.getContext(`2d`);
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -132,7 +132,7 @@ export default class StatisticsController {
 
   _makeTransportChart() {
     const sourceDataForChart = this._getChartData(this._parsedData.transport);
-    const canvas = this._statisics.getElement().querySelector(`.${ClassesElements.STATISTICS_TRANSPORT}`);
+    const canvas = this._statisics.getElement().querySelector(`.${ElementClass.STATISTICS_TRANSPORT}`);
     const ctxTags = canvas.getContext(`2d`);
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -185,7 +185,7 @@ export default class StatisticsController {
 
   _makeTimeChart() {
     const sourceDataForChart = this._getChartData(this._parsedData.time);
-    const canvas = this._statisics.getElement().querySelector(`.${ClassesElements.STATISTICS_TIME}`);
+    const canvas = this._statisics.getElement().querySelector(`.${ElementClass.STATISTICS_TIME}`);
     const ctxTags = canvas.getContext(`2d`);
     ctxTags.clearRect(0, 0, canvas.width, canvas.height);
 

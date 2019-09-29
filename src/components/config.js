@@ -1,13 +1,13 @@
-import {getRandomElementsFromArray, getRandomIntegerBetween, getEventPhoto} from "./utils";
+import {globalState} from "../main";
 
-export const HTTPMethod = {
+export const HttpMethod = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
   DELETE: `DELETE`,
 };
 
-export const HTTPHeaders = {
+export const HttpHeader = {
   JSON: {'Content-Type': `application/json`},
 };
 
@@ -19,35 +19,26 @@ export const ApiData = {
   OFFERS: `offers`,
 };
 
+export const Default = {
+  CHECKED_TYPE: `flight`,
+  SORT_EVENTS: `sort-event`,
+  ACTIVE_EVENT_TYPE: `taxi`,
+};
 
-export const ALL_EVENT_COUNT = 4;
-const DESCRIPTION_LENGTH = 3;
-const MIN_NUMBER_OF_PHOTO = 1;
-const MAX_NUMBER_OF_PHOTO = 5;
-export const DEFAULT_CHECKED_TYPE = `flight`;
-export const DEFAULT_SORT_EVENTS = `sort-event`;
-export const SORT_ID_PREFIX = `sort-`;
-export const FILTER_ID_PREFIX = `filter-`;
-const descriptions = [
-  `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.`,
-  `Fusce tristique felis at fermentum pharetra.`,
-  `Aliquam id orci ut lectus varius viverra.`,
-  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
-  `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-  `Aliquam erat volutpat.`,
-  `Nunc fermentum tortor ac porta dapibus.`,
-  `In rutrum ac purus sit amet tempus.`
-];
+export const IdPrefix = {
+  SORT: `sort-`,
+  FILTER: `filter-`,
+};
 
 export const LOCALES = `en-US`;
 
-export const TIME_FORMAT = {
+export const TimeFormat = {
   hour: `numeric`,
   minute: `numeric`,
   hour12: false
 };
+
+export const NumberAdditionalOptionsInList = 3;
 
 export const ACTIVITY_EVENT_TYPES = new Map([
   [`taxi`, {
@@ -107,45 +98,7 @@ export const TRANSFER_EVENT_TYPES = new Map([
 
 export const ALL_EVENT_TYPES = new Map([...[...ACTIVITY_EVENT_TYPES, ...TRANSFER_EVENT_TYPES]]);
 
-export const EVENT_DESTINATION = new Map([
-  [`Amsterdam`, {
-    DESCRIPTION: getRandomElementsFromArray(descriptions, DESCRIPTION_LENGTH).join(` `),
-    PHOTO: new Array(getRandomIntegerBetween(MIN_NUMBER_OF_PHOTO, MAX_NUMBER_OF_PHOTO)).fill(``).map(() => getEventPhoto()),
-  }],
-  [`Geneva`, {
-    DESCRIPTION: getRandomElementsFromArray(descriptions, DESCRIPTION_LENGTH).join(` `),
-    PHOTO: new Array(getRandomIntegerBetween(MIN_NUMBER_OF_PHOTO, MAX_NUMBER_OF_PHOTO)).fill(``).map(() => getEventPhoto()),
-  }],
-  [`Chamonix`, {
-    DESCRIPTION: getRandomElementsFromArray(descriptions, DESCRIPTION_LENGTH).join(` `),
-    PHOTO: new Array(getRandomIntegerBetween(MIN_NUMBER_OF_PHOTO, MAX_NUMBER_OF_PHOTO)).fill(``).map(() => getEventPhoto()),
-  }],
-  [`Saint Petersburg`, {
-    DESCRIPTION: getRandomElementsFromArray(descriptions, DESCRIPTION_LENGTH).join(` `),
-    PHOTO: new Array(getRandomIntegerBetween(MIN_NUMBER_OF_PHOTO, MAX_NUMBER_OF_PHOTO)).fill(``).map(() => getEventPhoto()),
-  }],
-]);
-
-export const ADDITIONAL_OPTIONS = new Map([
-  [`luggage`, {
-    NAME: `Add luggage`,
-    PRICE: 10
-  }],
-  [`comfort`, {
-    NAME: `Switch to comfort class`,
-    PRICE: 150
-  }],
-  [`meal`, {
-    NAME: `Add meal`,
-    PRICE: 2
-  }],
-  [`seats`, {
-    NAME: `Choose seats`,
-    PRICE: 9
-  }]
-]);
-
-export const MENU = new Map([
+export const MENU_ITEMS = new Map([
   [`table`, {
     NAME: `Table`,
     URL: `#`
@@ -156,13 +109,13 @@ export const MENU = new Map([
   }]
 ]);
 
-export const FILTERS = new Map([
+export const FILTER_ITEMS = new Map([
   [`everything`, `Everything`],
   [`future`, `Future`],
   [`past`, `Past`]
 ]);
 
-export const SORT = new Map([
+export const SORT_ITEMS = new Map([
   [`event`, {
     NAME: `Event`,
     ICON: ``
@@ -183,12 +136,12 @@ export const SORT = new Map([
   }]
 ]);
 
-export const IdElements = {
+export const ElementId = {
   MENU_LINK_TABLE: `table`,
   MENU_LINK_STATS: `stats`,
 };
 
-export const ClassesElements = {
+export const ElementClass = {
   TRIP_INFO: `trip-info`,
   TRIP_CONTROLS: `trip-controls`,
   TRIP_MENU: `trip-controls h2`,
@@ -235,3 +188,13 @@ FLATPICKR_CONF.forEach((value, key) => {
 });
 
 export const FLATPICKR_CONFIG = FLATPICKR_TEMP_CONFIG;
+
+export const getEventDefaultData = () => ({
+  type: globalState.offers[0].type,
+  destination: globalState.destinations[0],
+  startDate: Date.now(),
+  endDate: Date.now(),
+  price: 1,
+  additionalOptions: globalState.offers[0].offers,
+  isFavorite: false,
+});

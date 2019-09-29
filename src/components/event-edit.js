@@ -1,4 +1,4 @@
-import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, DEFAULT_CHECKED_TYPE, TRANSFER_EVENT_TYPES} from "./config";
+import {ACTIVITY_EVENT_TYPES, ALL_EVENT_TYPES, Default, TRANSFER_EVENT_TYPES} from "./config";
 import {getPhotosMarkup} from "./utils";
 import {getMarkupEventTypeItems} from "./event-type-item";
 import {getEditAdditionalOptions} from "./additional-options";
@@ -8,7 +8,7 @@ import {globalState} from "../main";
 export default class EventEdit extends AbstractComponent {
   constructor({type, destination, startDate, endDate, price, additionalOptions, isFavorite}) {
     super();
-    this._type = type ? type : DEFAULT_CHECKED_TYPE;
+    this._type = type ? type : Default.CHECKED_TYPE;
     this._destination = destination;
     this._endDate = endDate;
     this._startDate = startDate;

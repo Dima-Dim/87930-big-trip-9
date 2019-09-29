@@ -1,4 +1,4 @@
-import {DEFAULT_SORT_EVENTS, SORT_ID_PREFIX, ADDITIONAL_OPTIONS, IdElements, ClassesElements, FILTERS} from "../components/config";
+import {Default, IdPrefix, ElementId, ElementClass, FILTER_ITEMS} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import TripInfo from "../components/trip-info";
 import TripSort from "../components/trip-sort";
@@ -20,19 +20,19 @@ export class Index {
     this._sortedEvents = [];
     this._tripInfo = new TripInfo(this._days);
     this._menuController = new MenuController(this._onChangeView.bind(this));
-    this._statisticsController = new StatisticsController(`.${ClassesElements.TRIP_EVENTS}`, this._events);
-    this._search = new SearchController(Array.from(FILTERS), this._onChangeView.bind(this));
-    this._tripSort = new TripSort(DEFAULT_SORT_EVENTS, this._onChangeTripSortItem.bind(this));
+    this._statisticsController = new StatisticsController(`.${ElementClass.TRIP_EVENTS}`, this._events);
+    this._search = new SearchController(Array.from(FILTER_ITEMS), this._onChangeView.bind(this));
+    this._tripSort = new TripSort(Default.SORT_EVENTS, this._onChangeTripSortItem.bind(this));
     this._daysContainer = new DaysContainer();
     this._noDays = new NoDays();
     this._onDataChange = this._onDataChange.bind(this);
     this._pages = new Map([
-      [IdElements.MENU_LINK_TABLE, [this._search.filters(), this._daysContainer, this._tripSort]],
-      [IdElements.MENU_LINK_STATS, [this._statisticsController]],
+      [ElementId.MENU_LINK_TABLE, [this._search.filters(), this._daysContainer, this._tripSort]],
+      [ElementId.MENU_LINK_STATS, [this._statisticsController]],
     ]);
     this._state = {
-      sort: DEFAULT_SORT_EVENTS,
-      page: IdElements.MENU_LINK_TABLE,
+      sort: Default.SORT_EVENTS,
+      page: ElementId.MENU_LINK_TABLE,
       adding: null,
       editing: null,
     };
@@ -53,15 +53,15 @@ export class Index {
   }
 
   init() {
-    AbstractComponent.renderElement(`.${ClassesElements.TRIP_INFO}`, this._tripInfo.getElement(), `prepend`);
-    AbstractComponent.renderElement(`.${ClassesElements.TRIP_CONTROLS}`, this._search.filters().getElement());
-    AbstractComponent.renderElement(`.${ClassesElements.TRIP_EVENTS}`, this._daysContainer.getElement());
+    AbstractComponent.renderElement(`.${ElementClass.TRIP_INFO}`, this._tripInfo.getElement(), `prepend`);
+    AbstractComponent.renderElement(`.${ElementClass.TRIP_CONTROLS}`, this._search.filters().getElement());
+    AbstractComponent.renderElement(`.${ElementClass.TRIP_EVENTS}`, this._daysContainer.getElement());
     this._renderDays(this._daysContainer.getElement(), Array.from(this._days));
     Index._calculationTotalCost(this._days);
     this._menuController.init();
     this._statisticsController.init();
 
-    const eventAddBtn = document.querySelector(`.${ClassesElements.TRIP_EVENT_ADD}`);
+    const eventAddBtn = document.querySelector(`.${ElementClass.TRIP_EVENT_ADD}`);
 
     const onClickEventAddBtn = () => {
       if (!this._state.adding) {
@@ -90,16 +90,16 @@ export class Index {
     }
   }
 
-  _changeEventOrder(type = DEFAULT_SORT_EVENTS) {
+  _changeEventOrder(type = Default.SORT_EVENTS) {
     Index._calculationTotalCost(this._days);
     this._daysContainer.getElement().textContent = ``;
     this._sortedEvents = [];
 
-    if (type === DEFAULT_SORT_EVENTS) {
+    if (type === Default.SORT_EVENTS) {
       this._renderDays(this._daysContainer.getElement(), Array.from(this._days));
     } else {
       Array.from(this._days).forEach((day) => day[1].forEach((dayItem) => this._sortedEvents.push(dayItem)));
-      this._sortedEvents.sort(sortOrderEvents[this._state.sort.slice(SORT_ID_PREFIX.length)]);
+      this._sortedEvents.sort(sortOrderEvents[this._state.sort.slice(IdPrefix.SORT.length)]);
       this._renderDays(this._daysContainer.getElement(), [[0, this._sortedEvents]]);
     }
   }
@@ -120,7 +120,7 @@ export class Index {
         this._renderEvents(day.getElement().querySelector(`.trip-events__item`), day._events);
       }
     } else {
-      AbstractComponent.renderElement(`.${ClassesElements.TRIP_EVENTS}`, this._noDays.getElement());
+      AbstractComponent.renderElement(`.${ElementClass.TRIP_EVENTS}`, this._noDays.getElement());
     }
   }
 
@@ -167,15 +167,15 @@ export class Index {
   }
 
   static _calculationTotalCost(costItems) {
-    const totalCostElement = document.querySelector(`.${ClassesElements.TRIP_TOTAL_COST}`);
+    const totalCostElement = document.querySelector(`.${ElementClass.TRIP_TOTAL_COST}`);
     let totalCost = 0;
 
     for (let i of costItems) {
       for (let j of i[1]) {
         totalCost += j[`price`];
-        if (j[`additionalOptions`].size > 0) {
+        if (j[`additionalOptions`].length > 0) {
           for (let k of j[`additionalOptions`]) {
-            totalCost += Number(ADDITIONAL_OPTIONS.get(k)[`PRICE`]);
+            totalCost += Number((k)[`price`]);
           }
         }
       }

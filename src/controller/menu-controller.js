@@ -1,15 +1,15 @@
 import Menu from "../components/menu";
-import {ClassesElements, MENU} from "../components/config";
+import {ElementClass, MENU_ITEMS} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 
 export default class MenuController {
   constructor(onChangeView) {
-    this._menu = new Menu(Array.from(MENU));
+    this._menu = new Menu(Array.from(MENU_ITEMS));
     this._onChangeView = onChangeView;
   }
 
   init() {
-    AbstractComponent.renderElement(`.${ClassesElements.TRIP_MENU}`, this._menu.getElement(), `insertAfter`);
+    AbstractComponent.renderElement(`.${ElementClass.TRIP_MENU}`, this._menu.getElement(), `insertAfter`);
 
     const onClickMenu = (evt) => {
       const {target} = evt;

@@ -1,7 +1,8 @@
 import AbstractComponent from "../components/abstract-component";
 import {getDateForEvenEditFromTimeStamp, getPhotosMarkup, useFlatpickr} from "../components/utils";
-import {ALL_EVENT_TYPES, ClassesElements, EVENT_DESTINATION, KeyCode} from "../components/config";
+import {ALL_EVENT_TYPES, ElementClass, KeyCode} from "../components/config";
 import EventAdd from "../components/event-add";
+import {globalState} from "../main";
 
 export default class EventAddController {
   constructor(onDataChange, indexState) {
@@ -18,18 +19,18 @@ export default class EventAddController {
     AbstractComponent.renderElement(container, this._eventAdd.getElement(), `insertBefore`);
     this._indexState.adding = this._eventAdd.removeElement.bind(this._eventAdd);
     const inputs = this._eventAdd.getElement().querySelectorAll(`input, textarea`);
-    const eventAddInputList = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT_LIST}`);
-    const eventAddTypeIcon = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_ICON}`);
-    const eventAddTypeOutput = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_OUTPUT}`);
-    const eventAddDestinationInput = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_INPUT}`);
-    const eventAddDestinationDescription = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_DESCRIPTION}`);
-    const eventAddDestinationPhotosContainer = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_PHOTOS_CONTAINER}`);
-    const eventEditOffers = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_OFFER_CHECKBOX_CONTAINER}`);
-    const eventAddStartTimeInput = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-start-time"]`);
-    const eventAddEndTimeInput = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-end-time"]`);
-    const eventAddTypeInput = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT}`);
-    const eventAddCancel = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_DELETE_BTN}`);
-    const eventEditSaveBtn = this._eventAdd.getElement().querySelector(`.${ClassesElements.EVENT_SAVE_BTN}`);
+    const eventAddInputList = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TYPE_INPUT_LIST}`);
+    const eventAddTypeIcon = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TYPE_ICON}`);
+    const eventAddTypeOutput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TYPE_OUTPUT}`);
+    const eventAddDestinationInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_DESTINATION_INPUT}`);
+    const eventAddDestinationDescription = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_DESTINATION_DESCRIPTION}`);
+    const eventAddDestinationPhotosContainer = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_DESTINATION_PHOTOS_CONTAINER}`);
+    const eventEditOffers = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_OFFER_CHECKBOX_CONTAINER}`);
+    const eventAddStartTimeInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TIME_INPUT}[name="event-start-time"]`);
+    const eventAddEndTimeInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TIME_INPUT}[name="event-end-time"]`);
+    const eventAddTypeInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TYPE_INPUT}`);
+    const eventAddCancel = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_DELETE_BTN}`);
+    const eventEditSaveBtn = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_SAVE_BTN}`);
 
     const activeFieldsForm = [
       eventAddDestinationInput,
@@ -83,8 +84,8 @@ export default class EventAddController {
 
     const onChangeEventDescription = () => {
       const newDestination = eventAddDestinationInput.value;
-      eventAddDestinationDescription.textContent = EVENT_DESTINATION.get(newDestination).DESCRIPTION;
-      eventAddDestinationPhotosContainer.innerHTML = getPhotosMarkup(EVENT_DESTINATION.get(newDestination).PHOTO);
+      eventAddDestinationDescription.textContent = globalState.destinations.filter((it) => it.name === newDestination)[0].description;
+      eventAddDestinationPhotosContainer.innerHTML = getPhotosMarkup(globalState.destinations.filter((it) => it.name === newDestination)[0].pictures);
     };
 
     const onEscDownRollup = (evt) => {

@@ -1,6 +1,6 @@
 import Event from "../components/event";
 import EventEdit from "../components/event-edit";
-import {ClassesElements, KeyCode, ALL_EVENT_TYPES} from "../components/config";
+import {ElementClass, KeyCode, ALL_EVENT_TYPES} from "../components/config";
 import {getDateForEvenEditFromTimeStamp, getPhotosMarkup, useFlatpickr} from "../components/utils";
 import AbstractComponent from "../components/abstract-component";
 import "flatpickr/dist/flatpickr.min.css";
@@ -23,21 +23,21 @@ export default class EventController {
     const event = new Event(this._event);
     const eventEdit = new EventEdit(this._event);
     const inputs = eventEdit.getElement().querySelectorAll(`input, textarea`);
-    const eventRollupOpenBtn = event.getElement().querySelector(`.${ClassesElements.EVENT_ROLLUP_BTN}`);
-    const eventEditRollupCloseBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_ROLLUP_BTN}`);
-    const eventEditInputList = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT_LIST}`);
-    const eventEditTypeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_INPUT}`);
-    const eventEditTypeIcon = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_ICON}`);
-    const eventEditTypeOutput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TYPE_OUTPUT}`);
-    const eventEditDestinationInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_INPUT}`);
-    const eventEditDestinationDescription = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_DESCRIPTION}`);
-    const eventEditDestinationPhotosContainer = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DESTINATION_PHOTOS_CONTAINER}`);
-    const eventEditOffers = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_OFFER_CHECKBOX_CONTAINER}`);
-    const eventEditStartTimeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-start-time"]`);
-    const eventEditEndTimeInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_TIME_INPUT}[name="event-end-time"]`);
-    const eventEditFavoriteInput = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_FAVORITE_INPUT}`);
-    const eventEditDeleteBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_DELETE_BTN}`);
-    const eventEditSaveBtn = eventEdit.getElement().querySelector(`.${ClassesElements.EVENT_SAVE_BTN}`);
+    const eventRollupOpenBtn = event.getElement().querySelector(`.${ElementClass.EVENT_ROLLUP_BTN}`);
+    const eventEditRollupCloseBtn = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_ROLLUP_BTN}`);
+    const eventEditInputList = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_TYPE_INPUT_LIST}`);
+    const eventEditTypeInput = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_TYPE_INPUT}`);
+    const eventEditTypeIcon = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_TYPE_ICON}`);
+    const eventEditTypeOutput = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_TYPE_OUTPUT}`);
+    const eventEditDestinationInput = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_DESTINATION_INPUT}`);
+    const eventEditDestinationDescription = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_DESTINATION_DESCRIPTION}`);
+    const eventEditDestinationPhotosContainer = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_DESTINATION_PHOTOS_CONTAINER}`);
+    const eventEditOffers = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_OFFER_CHECKBOX_CONTAINER}`);
+    const eventEditStartTimeInput = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_TIME_INPUT}[name="event-start-time"]`);
+    const eventEditEndTimeInput = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_TIME_INPUT}[name="event-end-time"]`);
+    const eventEditFavoriteInput = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_FAVORITE_INPUT}`);
+    const eventEditDeleteBtn = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_DELETE_BTN}`);
+    const eventEditSaveBtn = eventEdit.getElement().querySelector(`.${ElementClass.EVENT_SAVE_BTN}`);
 
     const activeFieldsForm = [
       eventEditDestinationInput,
@@ -138,10 +138,7 @@ export default class EventController {
       evt.preventDefault();
       const form = new FormData(eventEdit.getElement());
       const offers = new Set();
-      const checkerOffers = () => {
-        eventEditOffers.querySelectorAll(`input:checked`).forEach((it) => offers.add(it.value));
-      };
-      checkerOffers();
+      eventEditOffers.querySelectorAll(`input:checked`).forEach((it) => offers.add(it.value));
 
       const entry = {
         destination: form.get(`event-destination`),

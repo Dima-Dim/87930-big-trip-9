@@ -1,4 +1,4 @@
-import {FLATPICKR_CONFIG, LOCALES, TIME_FORMAT} from "./config";
+import {FLATPICKR_CONFIG, LOCALES, TimeFormat} from "./config";
 import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 import * as RangePlugin from "flatpickr/dist/plugins/rangePlugin";
 import flatpickr from "flatpickr";
@@ -85,7 +85,7 @@ export const getYearFromTimeStamp = (timestamp, number = 4) => dateObgFromTimest
  *
  * @return {string}
  */
-export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(LOCALES, TIME_FORMAT);
+export const getTimeFromTimeStamp = (timestamp) => dateObgFromTimestamp(timestamp).toLocaleString(LOCALES, TimeFormat);
 
 /**
  * Функция, преобразующая timestamp в datetime для HTML

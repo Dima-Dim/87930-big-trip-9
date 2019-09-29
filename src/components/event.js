@@ -36,7 +36,9 @@ export default class Event extends AbstractComponent {
             
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">
+               
                 ${getAdditionalOptions(this._additionalOptions)}
+                
               </ul>
             
               <button class="event__rollup-btn" type="button">
