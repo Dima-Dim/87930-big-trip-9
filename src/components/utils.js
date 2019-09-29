@@ -155,67 +155,6 @@ export const getDurationFromTimeStamps = (startTimestamp, endTimestamp) => {
   return newString;
 };
 
-/**
- * Функция для получения случайного целого числа в заданном промежутке
- *
- * @param {number} min Минимальное значение промежутка
- * @param {number} max Максимальное значение промежутка
- *
- * @return {number} Случайное целое числа в заданном промежутке
- */
-export const getRandomIntegerBetween = (min, max) => min + Math.floor(Math.random() * (max + 1 - min));
-
-/**
- * Функция для получения нового массива случайных элемента из переданного массива
- *
- * @param {Array} arr Массив, из которого нужно поучить случайные элементы
- * @param {number} amount Количество случайных элементов, которое нужно получить.
- *
- * @return {Array}
- */
-export const getRandomElementsFromArray = (arr, amount = 1) => {
-  const newArr = [];
-  for (let i = 0; i < amount; i++) {
-    newArr.push(arr[getRandomIntegerBetween(0, arr.length)]);
-  }
-
-  return newArr;
-};
-
-/**
- * Функция для получения url-ов случайных фото
- *
- * @return {string} URL
- */
-export const getEventPhoto = () => `http://picsum.photos/248/152?r=${Math.random()}`;
-
-export const sortOrder = {
-  /**
-   * Функция для сортировки по возрастанию массива объектов на основании определенного свойства этих объектов
-   *
-   * @param {Object} a Левый элемент массива
-   * @param {Object} b Правый элемент массива
-   * @param {string} arg Свойство элемента массива, по которому необходимо выполнить сортировку
-   *
-   * @return {number}
-   */
-  asc(a, b, arg) {
-    return a[arg] - b[arg];
-  },
-  /**
-   * Функция для сортировки по убыванию массива объектов на основании определенного свойства этих объектов
-   *
-   * @param {Object} a Левый элемент массива
-   * @param {Object} b Правый элемент массива
-   * @param {string} arg Свойство элемента массива, по которому необходимо выполнить сортировку
-   *
-   * @return {number}
-   */
-  dec(a, b, arg) {
-    return b[arg] - a[arg];
-  },
-};
-
 export const sortOrderEvents = {
   time: (a, b) => (a.endDate - a.startDate) - (b.endDate - b.startDate),
   price: (a, b) => a.price - b.price,
