@@ -1,4 +1,4 @@
-import {FLATPICKR_CONFIG, LOCALES, TimeFormat} from "./config";
+import {FLATPICKR_CONFIG, KeyCode, LOCALES, TimeFormat} from "./config";
 import * as ConfirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate";
 import * as RangePlugin from "flatpickr/dist/plugins/rangePlugin";
 import flatpickr from "flatpickr";
@@ -286,4 +286,20 @@ export const checkStatus = (response) => {
 
 export const fromJSON = (response) => {
   return response.json();
+};
+
+export const enteredIsInteger = (evt) => {
+  if ((evt.keyCode >= 48 && evt.keyCode <= 57) ||
+    (evt.keyCode >= 96 && evt.keyCode <= 105) ||
+    evt.keyCode === KeyCode.BACKSPACE ||
+    evt.keyCode === KeyCode.HOME ||
+    evt.keyCode === KeyCode.END ||
+    evt.keyCode === KeyCode.DELETE ||
+    evt.keyCode === KeyCode.LEFT_ARROW ||
+    evt.keyCode === KeyCode.RIGHT_ARROW ||
+    (evt.keyCode === KeyCode.A && (evt.ctrlKey || evt.metaKey))) {
+    return true;
+  }
+
+  return false;
 };

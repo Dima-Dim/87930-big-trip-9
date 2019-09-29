@@ -80,7 +80,7 @@ export const ACTIVITY_EVENT_TYPES = new Map([
 
 export const TRANSFER_EVENT_TYPES = new Map([
   [`check-in`, {
-    NAME: `Check-in`,
+    NAME: `Check`,
     TITLE: `Check into`,
     ICON_URL: `img/icons/check-in.png`
   }],
@@ -170,6 +170,14 @@ export const ElementClass = {
 
 export const KeyCode = {
   ESC: 27,
+  BACKSPACE: 8,
+  HOME: 36,
+  END: 35,
+  DELETE: 46,
+  LEFT_ARROW: 37,
+  RIGHT_ARROW: 39,
+  A: 65,
+  CTRL: 17,
 };
 
 const FLATPICKR_TEMP_CONFIG = {};
@@ -179,7 +187,7 @@ export const FLATPICKR_CONF = new Map([
   [`enableTime`, true],
   [`time_24hr`, true],
   [`altInput`, true],
-  [`altFormat`, `d/m/y H:i`],
+  [`altFormat`, `d.m.y H:i`],
   [`dateFormat`, `U`],
 ]);
 

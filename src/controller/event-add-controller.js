@@ -1,5 +1,5 @@
 import AbstractComponent from "../components/abstract-component";
-import {getDateForEvenEditFromTimeStamp, getPhotosMarkup, useFlatpickr} from "../components/utils";
+import {enteredIsInteger, getDateForEvenEditFromTimeStamp, getPhotosMarkup, useFlatpickr} from "../components/utils";
 import {ALL_EVENT_TYPES, ElementClass, KeyCode} from "../components/config";
 import EventAdd from "../components/event-add";
 import {globalState} from "../main";
@@ -28,6 +28,7 @@ export default class EventAddController {
     const eventEditOffers = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_OFFER_CHECKBOX_CONTAINER}`);
     const eventAddStartTimeInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TIME_INPUT}[name="event-start-time"]`);
     const eventAddEndTimeInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TIME_INPUT}[name="event-end-time"]`);
+    const eventPriceInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_PRICE_INPUT}`);
     const eventAddTypeInput = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_TYPE_INPUT}`);
     const eventAddCancel = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_DELETE_BTN}`);
     const eventEditSaveBtn = this._eventAdd.getElement().querySelector(`.${ElementClass.EVENT_SAVE_BTN}`);
@@ -54,6 +55,7 @@ export default class EventAddController {
       eventAddCancel.removeEventListener(`click`, onClickEventAddCancel);
       eventAddInputList.removeEventListener(`change`, onChangeEventType);
       eventAddDestinationInput.removeEventListener(`change`, onChangeEventDescription);
+      eventPriceInput.removeEventListener(`keydown`, onKeydownPriceInput);
       for (const input of inputs) {
         input.removeEventListener(`focus`, onFocusInput);
       }
@@ -72,6 +74,7 @@ export default class EventAddController {
       eventAddCancel.addEventListener(`click`, onClickEventAddCancel);
       eventAddInputList.addEventListener(`change`, onChangeEventType);
       eventAddDestinationInput.addEventListener(`change`, onChangeEventDescription);
+      eventPriceInput.addEventListener(`keydown`, onKeydownPriceInput);
       this._eventAdd.getElement().addEventListener(`submit`, onSubmitForm);
       document.addEventListener(`keydown`, onEscDownRollup);
     };
@@ -104,6 +107,14 @@ export default class EventAddController {
       for (const input of inputs) {
         input.addEventListener(`blur`, onBlurInput);
       }
+    };
+
+    const onKeydownPriceInput = (evt) => {
+      if (enteredIsInteger(evt)) {
+        return;
+      }
+
+      evt.preventDefault();
     };
 
     const onClickEventAddCancel = () => {
