@@ -1,9 +1,12 @@
-import {ApiData} from "./components/config";
+import {ApiData, StorageKey} from "./components/config";
 import {Index} from "./controller";
 import Api from "./components/api";
+import Provider from "./components/provider";
+import Store from "./components/store";
 
 export const globalState = {
   api: new Api(ApiData),
+  provider: new Provider({api: new Api(ApiData), store: new Store(window.localStorage, StorageKey.MAIN)}),
   events: null,
   destinations: null,
 
@@ -20,24 +23,10 @@ export const globalState = {
   },
 };
 
-globalState.api.getEvents()
+globalState.provider.getEvents()
   .then((events) => globalState.addEvents(events))
-  .then(() => globalState.api.getDestination()
+  .then(() => globalState.provider.getDestinations()
     .then((destinations) => globalState.addDestinations(destinations)))
-  .then(() => globalState.api.getOffers()
+  .then(() => globalState.provider.getOffers()
     .then((offers) => globalState.addOffers(offers)))
   .then(() => new Index());
-
-/**
- * Функция для получения массива ивентов
- *
- * @param {number} count Количество ивентов, которое необходимо получить
- *
- * @return {Array} массив ивентов
- */
-// const getEvents = (count) => new Array(count).fill(``).map(getEventData).sort((a, b) => sortOrder.asc(a, b, `startDate`));
-//
-// globalState.events = getEvents(ALL_EVENT_COUNT);
-//
-// const start = new Index();
-// start.init();

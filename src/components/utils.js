@@ -223,10 +223,6 @@ export const checkStatus = (response) => {
   }
 };
 
-export const fromJSON = (response) => {
-  return response.json();
-};
-
 export const enteredIsInteger = (evt) => {
   if ((evt.keyCode >= 48 && evt.keyCode <= 57) ||
     (evt.keyCode >= 96 && evt.keyCode <= 105) ||
@@ -241,4 +237,22 @@ export const enteredIsInteger = (evt) => {
   }
 
   return false;
+};
+
+export const responseFromJSON = (response) => {
+  return response.json();
+};
+
+export const generateId = (length = 8) => {
+  const charset = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`;
+  let retVal = ``;
+
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return retVal;
+};
+
+export const objectToArray = (object) => {
+  return Object.keys(object).map((id) => object[id]);
 };

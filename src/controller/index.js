@@ -1,4 +1,4 @@
-import {Default, IdPrefix, ElementId, ElementClass, FILTER_ITEMS} from "../components/config";
+import {NetWorkStatus, StatusTitle, Default, IdPrefix, ElementId, ElementClass, FILTER_ITEMS} from "../components/config";
 import AbstractComponent from "../components/abstract-component";
 import TripInfo from "../components/trip-info";
 import TripSort from "../components/trip-sort";
@@ -75,6 +75,20 @@ export class Index {
     };
 
     eventAddBtn.addEventListener(`click`, onClickEventAddBtn);
+    window.addEventListener(`offline`, this._changeNetWorkStatus);
+    window.addEventListener(`online`, this._changeNetWorkStatus);
+  }
+
+  _changeNetWorkStatus(evt) {
+    if (evt.type === NetWorkStatus.online) {
+      window.removeEventListener(`offline`, this._changeNetWorkStatus);
+      StatusTitle[evt.type]();
+      globalState.provider.sync()
+        .then(this._dataChangeHandler({}));
+    } else {
+      StatusTitle[evt.type]();
+      window.addEventListener(`online`, this._changeNetWorkStatus);
+    }
   }
 
   _onChangeView(activeMenuItem, searchData) {
@@ -132,7 +146,7 @@ export class Index {
   }
 
   _dataChangeHandler({cb}) {
-    return () => globalState.api.getEvents()
+    return () => globalState.provider.getEvents()
       .then((events) => globalState.addEvents(events))
       .then(() => (this._events = globalState.events))
       .then(() => (this._days = this._getDays(this._events)))
@@ -144,14 +158,14 @@ export class Index {
 
   _onDataChange(currentData, newData, cb) {
     if (!newData) {
-      globalState.api.deleteEvent(currentData.id)
+      globalState.provider.removeEvent(currentData.id)
         .then(this._dataChangeHandler({cb}));
     } else if (!currentData) {
-      globalState.api.createEvent(newData)
+      globalState.provider.createEvent(newData)
         .then(this._dataChangeHandler({cb}));
     } else {
       newData.id = currentData.id;
-      globalState.api.updateEvent(newData)
+      globalState.provider.updateEvent(newData)
         .then(this._dataChangeHandler({cb}));
     }
   }

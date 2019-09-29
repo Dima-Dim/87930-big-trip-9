@@ -1,5 +1,5 @@
 import {ApiData, HttpHeader, HttpMethod} from "./config";
-import {checkStatus, fromJSON} from "./utils";
+import {checkStatus} from "./utils";
 import EventsAdapter from "./events-adapter";
 
 export default class Api {
@@ -9,19 +9,15 @@ export default class Api {
   }
 
   getEvents() {
-    return this._load({path: ApiData.POINTS})
-      .then(fromJSON)
-      .then(EventsAdapter.parseEvents);
+    return this._load({path: ApiData.POINTS});
   }
 
-  getDestination() {
-    return this._load({path: ApiData.DESTINATIONS})
-      .then(fromJSON);
+  getDestinations() {
+    return this._load({path: ApiData.DESTINATIONS});
   }
 
   getOffers() {
-    return this._load({path: ApiData.OFFERS})
-      .then(fromJSON);
+    return this._load({path: ApiData.OFFERS});
   }
 
   createEvent(event) {
@@ -30,9 +26,7 @@ export default class Api {
       method: HttpMethod.POST,
       body: JSON.stringify(EventsAdapter.toSource(event)),
       headers: new Headers(HttpHeader.JSON),
-    })
-      .then(fromJSON)
-      .then(EventsAdapter.parseEvent);
+    });
   }
 
   updateEvent(event) {
@@ -44,10 +38,19 @@ export default class Api {
     });
   }
 
-  deleteEvent(id) {
+  removeEvent(id) {
     return this._load({
       path: `${ApiData.POINTS}/${id}`,
       method: HttpMethod.DELETE,
+    });
+  }
+
+  syncEvents(events) {
+    return this._load({
+      path: `${ApiData.POINTS}/${ApiData.SYNC}`,
+      method: HttpMethod.POST,
+      body: JSON.stringify(events),
+      headers: new Headers(HttpHeader.JSON)
     });
   }
 
@@ -60,5 +63,4 @@ export default class Api {
         throw new Error(`fetch error: ${err}`);
       });
   }
-
 }

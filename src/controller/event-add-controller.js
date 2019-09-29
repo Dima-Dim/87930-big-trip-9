@@ -126,12 +126,17 @@ export default class EventAddController {
     const onSubmitForm = (evt) => {
       evt.preventDefault();
       const form = new FormData(this._eventAdd.getElement());
+      const destination = globalState.destinations.find((it) => it.name === form.get(`event-destination`));
       const eventType = eventAddTypeInput.querySelector(`input:checked`).value;
       const offers = new Set();
       eventEditOffers.querySelectorAll(`input:checked`).forEach((it) => offers.add(it.value));
 
       const entry = {
-        destination: form.get(`event-destination`),
+        destination: {
+          'description': destination.description,
+          'name': destination.name,
+          'pictures': destination.pictures,
+        },
         price: Number(form.get(`event-price`)),
         additionalOptions: globalState.offers.filter((it) => it.type === eventType)[0][`offers`].filter((it) => offers.has(it.name)),
         startDate: this._flatpickr.plugins && this._flatpickr.plugins.has(`range`) ? Number(eventAddStartTimeInput.value.slice(0, 10) * 1000) : Number(eventAddStartTimeInput.value * 1000),

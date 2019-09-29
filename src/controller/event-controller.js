@@ -153,7 +153,7 @@ export default class EventController {
     const onClickFavoriteInput = (evt) => {
       evt.preventDefault();
       blockForm();
-      const newEvent = Object.assign({}, this._event, {isFavorite: !this._event.isFavorite, destination: this._event.destination.name});
+      const newEvent = Object.assign({}, this._event, {isFavorite: !this._event.isFavorite});
 
       const favoriteSuccess = () => {
         eventEdit.alarmStyle(`remove`);
@@ -176,12 +176,17 @@ export default class EventController {
     const onSubmitForm = (evt) => {
       evt.preventDefault();
       const form = new FormData(eventEdit.getElement());
+      const destination = globalState.destinations.find((it) => it.name === form.get(`event-destination`));
       const eventType = eventEditTypeInput.querySelector(`input:checked`).value;
       const offers = new Set();
       eventEditOffers.querySelectorAll(`input:checked`).forEach((it) => offers.add(it.value));
 
       const entry = {
-        destination: form.get(`event-destination`),
+        destination: {
+          'description': destination.description,
+          'name': destination.name,
+          'pictures': destination.pictures,
+        },
         price: Number(form.get(`event-price`)),
         additionalOptions: globalState.offers.filter((it) => it.type === eventType)[0][`offers`].filter((it) => offers.has(it.name)),
         startDate: this._flatpickr.plugins && this._flatpickr.plugins.has(`range`) ? Number(eventEditStartTimeInput.value.slice(0, 10) * 1000) : Number(eventEditStartTimeInput.value * 1000),

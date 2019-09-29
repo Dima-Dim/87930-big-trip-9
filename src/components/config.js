@@ -17,6 +17,27 @@ export const ApiData = {
   POINTS: `points`,
   DESTINATIONS: `destinations`,
   OFFERS: `offers`,
+  SYNC: `sync`,
+};
+
+export const StorageKey = {
+  MAIN: `BigTrip`,
+  DESTINATIONS: `BigTripDestinations`,
+  OFFERS: `BigTripOffers`
+};
+
+export const NetWorkStatus = {
+  online: `online`,
+  offline: `offline`
+};
+
+export const StatusTitle = {
+  offline: () => {
+    document.title = `${document.title} [OFFLINE]`;
+  },
+  online: () => {
+    document.title = document.title.split(` [OFFLINE]`)[0];
+  },
 };
 
 export const Default = {
