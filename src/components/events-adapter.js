@@ -34,7 +34,7 @@ export default class EventsAdapter {
       'date_from': data.startDate,
       'date_to': data.endDate,
       'is_favorite': data.isFavorite,
-      'offers': globalState.offers.filter((it) => it.type === data.type)[0][`offers`].filter((it) => data.additionalOptions.has(it.name)),
+      'offers': data.additionalOptions,
     };
   }
 }

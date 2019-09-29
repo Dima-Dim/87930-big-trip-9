@@ -161,7 +161,7 @@ export class Index {
           .then(() => (this._days = this._getDays(this._events)))
           .then(() => this._tripInfo.update(this._days))
           .then(() => cb.success(`remove`))
-          .then(() => this._changeEventOrder()))
+          .then((response) => response ? this._changeEventOrder() : null))
         .catch((err) => cb.error(err));
     }
   }
