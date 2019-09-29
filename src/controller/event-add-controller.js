@@ -3,6 +3,7 @@ import {enteredIsInteger, getDateForEvenEditFromTimeStamp, getPhotosMarkup, useF
 import {ALL_EVENT_TYPES, ElementClass, KeyCode} from "../components/config";
 import EventAdd from "../components/event-add";
 import {globalState} from "../main";
+import {getEditAdditionalOptions} from "../components/additional-options";
 
 export default class EventAddController {
   constructor(onDataChange, indexState) {
@@ -83,6 +84,7 @@ export default class EventAddController {
       const newEventType = eventAddInputList.querySelector(`input:checked`).value;
       eventAddTypeIcon.src = ALL_EVENT_TYPES.get(newEventType)[`ICON_URL`];
       eventAddTypeOutput.textContent = ALL_EVENT_TYPES.get(newEventType)[`TITLE`];
+      eventEditOffers.innerHTML = getEditAdditionalOptions(newEventType, globalState.offers.filter((it) => it.type === newEventType)[0].offers);
     };
 
     const onChangeEventDescription = () => {
