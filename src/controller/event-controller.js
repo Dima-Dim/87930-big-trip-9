@@ -5,6 +5,7 @@ import {getDateForEvenEditFromTimeStamp, getPhotosMarkup, useFlatpickr} from "..
 import AbstractComponent from "../components/abstract-component";
 import "flatpickr/dist/flatpickr.min.css";
 import {globalState} from "../main";
+import {getEditAdditionalOptions} from "../components/additional-options";
 
 export default class EventController {
   constructor(container, data, onDataChange, indexState, position) {
@@ -107,6 +108,7 @@ export default class EventController {
       const newEventType = eventEditInputList.querySelector(`input:checked`).value;
       eventEditTypeIcon.src = ALL_EVENT_TYPES.get(newEventType)[`ICON_URL`];
       eventEditTypeOutput.textContent = ALL_EVENT_TYPES.get(newEventType)[`TITLE`];
+      eventEditOffers.innerHTML = getEditAdditionalOptions(newEventType, globalState.offers.filter((it) => it.type === newEventType)[0].offers);
     };
 
     const onChangeEventDescription = () => {
