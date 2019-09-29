@@ -131,38 +131,28 @@ export class Index {
     }
   }
 
+  _dataChangeHandler({cb}) {
+    return () => globalState.api.getEvents()
+      .then((events) => globalState.addEvents(events))
+      .then(() => (this._events = globalState.events))
+      .then(() => (this._days = this._getDays(this._events)))
+      .then(() => this._tripInfo.update(this._days))
+      .then(() => cb.success(`remove`))
+      .then((response) => response ? this._changeEventOrder() : null)
+      .catch((err) => cb.error(err));
+  }
+
   _onDataChange(currentData, newData, cb) {
     if (!newData) {
       globalState.api.deleteEvent(currentData.id)
-        .then(() => globalState.api.getEvents()
-          .then((events) => globalState.addEvents(events))
-          .then(() => (this._events = globalState.events))
-          .then(() => (this._days = this._getDays(this._events)))
-          .then(() => this._tripInfo.update(this._days))
-          .then(() => cb.success(`remove`))
-          .then(() => this._changeEventOrder()))
-        .catch((err) => cb.error(err));
+        .then(this._dataChangeHandler({cb}));
     } else if (!currentData) {
       globalState.api.createEvent(newData)
-        .then(() => globalState.api.getEvents()
-          .then((events) => globalState.addEvents(events))
-          .then(() => (this._events = globalState.events))
-          .then(() => (this._days = this._getDays(this._events)))
-          .then(() => this._tripInfo.update(this._days))
-          .then(() => cb.success(`remove`))
-          .then(() => this._changeEventOrder()))
-        .catch((err) => cb.error(err));
+        .then(this._dataChangeHandler({cb}));
     } else {
       newData.id = currentData.id;
       globalState.api.updateEvent(newData)
-        .then(() => globalState.api.getEvents()
-          .then((events) => globalState.addEvents(events))
-          .then(() => (this._events = globalState.events))
-          .then(() => (this._days = this._getDays(this._events)))
-          .then(() => this._tripInfo.update(this._days))
-          .then(() => cb.success(`remove`))
-          .then((response) => response ? this._changeEventOrder() : null))
-        .catch((err) => cb.error(err));
+        .then(this._dataChangeHandler({cb}));
     }
   }
 
