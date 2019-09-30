@@ -1,28 +1,37 @@
-const CACHE_NAME = `BigTrip_v1.0`;
+const CACHE_NAME = `BigTrip_v1.1`;
 const TIMEOUT = 1000;
+const CACHE_ITEMS = [
+  `./`,
+  `./index.html`,
+  `https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800&display=swap`,
+  `./css/style.css`,
+  `./img/icons/bus.png`,
+  `./img/icons/train.png`,
+  `./img/icons/transport.png`,
+  `./img/icons/trip.png`,
+  `./img/icons/restaurant.png`,
+  `./img/icons/ship.png`,
+  `./img/icons/sightseeing.png`,
+  `./img/icons/bus.png`,
+  `./img/icons/check-in.png`,
+  `./img/icons/drive.png`,
+  `./img/icons/flight.png`,
+  `./img/photos/1.jpg`,
+  `./img/photos/2.jpg`,
+  `./img/photos/3.jpg`,
+  `./img/photos/4.jpg`,
+  `./img/photos/5.jpg`,
+  `./img/header-bg.png`,
+  `./img/header-bg@2x.png`,
+  `./img/logo.png`,
+  `./bundle.js`,
+]
 
 self.addEventListener(`install`, (evt) => {
 
   evt.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll([
-          `./`,
-          `./index.html`,
-          `https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800&display=swap`,
-          `./css/style.css`,
-          `./img/icons/bus.png`,
-          `./img/icons/train.png`,
-          `./img/icons/transport.png`,
-          `./img/icons/trip.png`,
-          `./img/icons/restaurant.png`,
-          `./img/icons/ship.png`,
-          `./img/icons/sightseeing.png`,
-          `./img/icons/bus.png`,
-          `./img/icons/check-in.png`,
-          `./img/icons/drive.png`,
-          `./img/icons/flight.png`,
-          `./bundle.js`,
-        ])
+      .then((cache) => cache.addAll(CACHE_ITEMS)
       )
       .then(() => self.skipWaiting())
       .catch((err) => new Error(`Cache addAll error: ${err}`))
@@ -35,10 +44,11 @@ self.addEventListener(`activate`, (evt) => {
 
 self.addEventListener(`fetch`, (evt) => {
 
-  if(!evt.request.url.includes("picsum.photos")) {
+  if(CACHE_ITEMS.includes(evt.request.url)) {
     evt.respondWith(
       fromNetwork(evt.request, TIMEOUT)
         .then((response) => {
+          console.log(`${evt.request.url} ответил.`)
           toCache(evt.request, response.clone());
           return response;
         })
