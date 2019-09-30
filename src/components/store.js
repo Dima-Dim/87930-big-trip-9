@@ -11,11 +11,45 @@ export default class Store {
   }
 
   getDestinations() {
-    this._storage.getItem(StorageKey.DESTINATIONS);
+    let destinations = null;
+    let jsonDestinations = null;
+
+    try {
+      jsonDestinations = this._storage.getItem(StorageKey.DESTINATIONS);
+    } catch (err) {
+      throw new Error(`Storage error: ${err}`);
+    }
+
+    if (jsonDestinations) {
+      try {
+        destinations = JSON.parse(jsonDestinations);
+      } catch (err) {
+        throw new Error(`Storage JSON parse error: ${err}`);
+      }
+    }
+
+    return destinations;
   }
 
   getOffers() {
-    this._storage.getItem(StorageKey.OFFERS);
+    let offers = null;
+    let jsonOffers = null;
+
+    try {
+      jsonOffers = this._storage.getItem(StorageKey.OFFERS);
+    } catch (err) {
+      throw new Error(`Storage error: ${err}`);
+    }
+
+    if (jsonOffers) {
+      try {
+        offers = JSON.parse(jsonOffers);
+      } catch (err) {
+        throw new Error(`Storage JSON parse error: ${err}`);
+      }
+    }
+
+    return offers;
   }
 
   setItem({id, item}) {
