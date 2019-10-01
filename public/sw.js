@@ -1,6 +1,8 @@
 const CACHE_NAME = `BigTrip_v1.1`;
 const TIMEOUT = 1000;
 const CACHE_ITEMS = [
+  `/`,
+  `/index.html`,
   `./`,
   `./index.html`,
   `https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800&display=swap`,
@@ -45,6 +47,7 @@ self.addEventListener(`activate`, (evt) => {
 self.addEventListener(`fetch`, (evt) => {
 
   if(CACHE_ITEMS.includes(evt.request.url)) {
+    console.log(`Обрабатываем запрос к ${evt.request.url}`)
     evt.respondWith(
       fromNetwork(evt.request, TIMEOUT)
         .then((response) => {
@@ -53,6 +56,7 @@ self.addEventListener(`fetch`, (evt) => {
           return response;
         })
         .catch((err) => {
+          console.log(`Пошли за кешем для ${evt.request.url}`)
           return fromCache(evt.request);
         })
     );
