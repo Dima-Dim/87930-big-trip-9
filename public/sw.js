@@ -64,8 +64,6 @@ self.addEventListener(`fetch`, (evt) => {
     evt.respondWith(
       fromNetwork(evt.request, TIMEOUT_MAX)
         .then((response) => {
-          console.log(`${evt.request.url} ответил.`)
-          toCache(evt.request, response.clone());
           return response;
         })
         .catch((err) => new Error(`fetch error: ${err}`))
