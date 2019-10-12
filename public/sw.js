@@ -60,6 +60,8 @@ self.addEventListener(`fetch`, (evt) => {
           return fromCache(evt.request);
         })
     );
+  } else {
+    console.log(`Мимо: ${evt.request.url}`)
   }
 });
 
