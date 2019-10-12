@@ -1,5 +1,6 @@
 const CACHE_NAME = `BigTrip_v1.1`;
 const TIMEOUT = 1000;
+const TIMEOUT_MAX = 10000;
 const CACHE_ITEMS = [
   `/`,
   `/index.html`,
@@ -45,8 +46,7 @@ self.addEventListener(`activate`, (evt) => {
 });
 
 self.addEventListener(`fetch`, (evt) => {
-
-  if(CACHE_ITEMS.includes(evt.request.url)) {
+  if (caches.match(evt.request)) {
     console.log(`Обрабатываем запрос к ${evt.request.url}`)
     evt.respondWith(
       fromNetwork(evt.request, TIMEOUT)
@@ -61,7 +61,15 @@ self.addEventListener(`fetch`, (evt) => {
         })
     );
   } else {
-    console.log(`Мимо: ${evt.request.url}`)
+    evt.respondWith(
+      fromNetwork(evt.request, TIMEOUT_MAX)
+        .then((response) => {
+          console.log(`${evt.request.url} ответил.`)
+          toCache(evt.request, response.clone());
+          return response;
+        })
+        .catch((err) => new Error(`fetch error: ${err}`))
+    )
   }
 });
 
